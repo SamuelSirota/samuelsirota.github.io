@@ -15,3 +15,35 @@ iframe {
 .entry-cover img {
     border: 1px solid var(--border);
 }
+
+:root {
+    --theme: rgb(197, 189, 147);    /* Warm beige-gold base */
+    --entry: rgb(240, 235, 210);    /* Soft off-white with a warm tint */
+    --primary: rgb(40, 35, 25);     /* Dark brown-black for primary text */
+    --secondary: rgb(120, 110, 90);  /* Muted taupe for secondary text */
+    --tertiary: rgb(220, 215, 180); /* Light warm gray for accents */
+    --content: rgb(50, 45, 35);     /* Slightly lighter brown-black for content */
+    --code-block-bg: rgb(60, 55, 45); /* Dark warm gray for code blocks */
+    --code-bg: rgb(230, 225, 200);  /* Pale warm off-white for inline code */
+    --border: rgb(210, 205, 170);   /* Subtle warm beige for borders */
+}
+
+.dark {
+    --theme: rgb(4, 9, 21);        /* Deep dark blue as the base */
+    --entry: rgb(20, 25, 38);      /* Slightly lighter blue-gray for entries */
+    --primary: rgb(200, 210, 230); /* Light bluish-white for primary text */
+    --secondary: rgb(140, 150, 170); /* Softer blue-gray for secondary text */
+    --tertiary: rgb(40, 50, 70);   /* Mid-tone blue for accents */
+    --content: rgb(180, 190, 210); /* Light blue-gray for content */
+    --code-block-bg: rgb(20, 25, 38); /* Matching entry for code blocks */
+    --code-bg: rgb(30, 35, 50);    /* Slightly lighter blue for inline code */
+    --border: rgb(25, 30, 45);     /* Subtle blue border */
+}
+
+.list {
+    background: var(--theme);
+}
+
+.dark.list {
+    background: var(--theme);
+}
