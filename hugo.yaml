@@ -24,14 +24,20 @@ languages:
       tag: tags
     menu:
       main:
-        - name: Archive
-          url: archives/
+        - name: Posts
+          url: posts/
+          weight: 4
+        - name: About me
+          url: about-me/
           weight: 5
-        - name: Tags
-          url: tags/
-          weight: 9
         - name: Search
           url: search/
+          weight: 9
+        - name: Archive
+          url: archives/
+          weight: 10
+        - name: Tags
+          url: tags/
           weight: 10
     
     params:
@@ -47,7 +53,7 @@ languages:
           - name: Blog
             url: posts/
           - name: About me
-            url: https://github.com/adityatelange/hugo-PaperMod/wiki/Features#profile-mode
+            url: about-me/
 
   sk:
     languageName: "🇸🇰"
@@ -57,15 +63,22 @@ languages:
       tag: tags
     menu:
       main:
-        - name: Archív
-          url: archiv/
+        - name: Príspevky
+          url: sk/posts/
+          weight: 4
+        - name: O mne
+          url: o-mne/
           weight: 5
-        - name: Tagy
-          url: tags/
-          weight: 9
         - name: Hľadať
           url: hladat/
+          weight: 9
+        - name: Archív
+          url: archiv/
           weight: 10
+        - name: Tagy
+          url: tagy/
+          weight: 10
+        
 
     # custom params for each language should be under [langcode].parms - hugo v0.120.0
     params:
@@ -81,7 +94,7 @@ languages:
           - name: Blog
             url: posts/
           - name: O mne
-            url: https://github.com/adityatelange/hugo-PaperMod/wiki/Features#profile-mode
+            url: o-mne/
 
 outputs:
   home:
@@ -91,17 +104,17 @@ outputs:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  description: "Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod"
-  author: Theme PaperMod
+  description: "Samuel Sirota personal website"
+  author: Samuel Sirota
   # author: ["Me", "You"] # multiple authors
 
   defaultTheme: auto
   # disableThemeToggle: true
-  ShowShareButtons: true
+  ShowShareButtons: false
   ShowReadingTime: true
   # disableSpecial1stPost: true
   displayFullLangName: true
-  ShowPostNavLinks: true
+  ShowPostNavLinks: false
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: true
   ShowRssButtonInSectionTermList: true
@@ -137,17 +150,11 @@ params:
 
   socialIcons:
     - name: github
-      title: View Source on Github
-      url: "https://github.com/adityatelange/hugo-PaperMod"
-    - name: Discord
-      title: Join discord community
-      url: "https://discord.gg/ahpmTvhVmp"
+      url: "https://github.com/SamuelSirota"
     - name: X
-      title: Share PaperMod on X/Twitter
-      url: "https://x.com/intent/tweet/?text=Checkout%20Hugo%20PaperMod%20%E2%9C%A8%0AA%20fast,%20clean,%20responsive%20Hugo%20theme.&url=https://github.com/adityatelange/hugo-PaperMod&hashtags=Hugo,PaperMod"
-    - name: KoFi
-      title: Buy me a Ko-Fi :)
-      url: "https://ko-fi.com/adityatelange"
+      url: "https://x.com/SamkoPengu"
+    - name: linkedin
+      url: "https://www.linkedin.com/in/samuelsirota/"
 
   editPost:
     URL: "https://github.com/adityatelange/hugo-PaperMod/tree/exampleSite/content"
