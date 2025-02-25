@@ -32,7 +32,20 @@
       <link>http://localhost:1313/about-me/</link>
       <pubDate>Tue, 25 Feb 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/about-me/</guid>
-      <description></description>
+      <description>&lt;p&gt;I am a versatile computer science professional with a strong foundation in programming, computer security, and artificial intelligence. My education has equipped me with a diverse set of skills, making me adept at tackling complex technical challenges.&lt;/p&gt;
+&lt;h3 id=&#34;key-skills&#34;&gt;Key Skills&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;💻 &lt;strong&gt;Programming and Development&lt;/strong&gt;: Proficient in multiple programming languages, algorithms, data structures, web development, and software engineering.&lt;/li&gt;
+&lt;li&gt;🔒 &lt;strong&gt;Computer Security&lt;/strong&gt;: Knowledgeable in cryptography, network security, information security practices, and legal aspects of computer crimes.&lt;/li&gt;
+&lt;li&gt;🤖 &lt;strong&gt;Artificial Intelligence and Machine Learning&lt;/strong&gt;: Skilled in AI techniques, neural networks, and machine learning algorithms.&lt;/li&gt;
+&lt;li&gt;📐 &lt;strong&gt;Mathematics and Logic&lt;/strong&gt;: Strong analytical skills with a solid foundation in linear algebra, discrete mathematics, statistics, and algorithmic analysis.&lt;/li&gt;
+&lt;li&gt;🖥️ &lt;strong&gt;Computer Theory and Systems&lt;/strong&gt;: Familiar with computer architecture, operating systems, networking, and theoretical computer science.&lt;/li&gt;
+&lt;li&gt;🖱️ &lt;strong&gt;Human-Computer Interaction&lt;/strong&gt;: Understanding of user interface design principles.&lt;/li&gt;
+&lt;li&gt;📈 &lt;strong&gt;Business and Marketing&lt;/strong&gt;: Basics of digital marketing strategies.&lt;/li&gt;
+&lt;li&gt;🌐 &lt;strong&gt;Language&lt;/strong&gt;: Proficient in English.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;experience&#34;&gt;Experience&lt;/h3&gt;
+&lt;p&gt;Through multiple team projects and a bachelor thesis, I have developed strong collaboration and research skills, applying theoretical knowledge to practical scenarios.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Markdown Syntax Guide</title>
