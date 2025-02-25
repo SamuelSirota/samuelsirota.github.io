@@ -76,7 +76,7 @@ languages:
           url: archiv/
           weight: 10
         - name: Tagy
-          url: tagy/
+          url: tags/
           weight: 10
         
 
