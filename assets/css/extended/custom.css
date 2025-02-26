@@ -17,15 +17,15 @@ iframe {
 }
 
 :root {
-    --theme: rgb(197, 189, 147);    /* Warm beige-gold base */
-    --entry: rgb(240, 235, 210);    /* Soft off-white with a warm tint */
-    --primary: rgb(40, 35, 25);     /* Dark brown-black for primary text */
-    --secondary: rgb(120, 110, 90);  /* Muted taupe for secondary text */
-    --tertiary: rgb(220, 215, 180); /* Light warm gray for accents */
-    --content: rgb(50, 45, 35);     /* Slightly lighter brown-black for content */
-    --code-block-bg: rgb(60, 55, 45); /* Dark warm gray for code blocks */
-    --code-bg: rgb(230, 225, 200);  /* Pale warm off-white for inline code */
-    --border: rgb(210, 205, 170);   /* Subtle warm beige for borders */
+    --theme: rgb(235, 230, 190);    /* Darker, less white: muted warm yellow */
+    --entry: rgb(245, 240, 205);    /* Softer, less stark off-white */
+    --primary: rgb(40, 35, 20);     /* Deeper brown-black for contrast */
+    --secondary: rgb(120, 115, 85);  /* Muted taupe, slightly darker */
+    --tertiary: rgb(215, 210, 175);  /* Warm gray, toned down from white */
+    --content: rgb(50, 45, 30);     /* Darker brown, less harsh */
+    --code-block-bg: rgb(60, 55, 40); /* Darker warm gray for depth */
+    --code-bg: rgb(230, 225, 185);   /* Muted warm off-white, less bright */
+    --border: rgb(205, 200, 160);    /* Subtle beige, darker and less white */
 }
 
 .dark {

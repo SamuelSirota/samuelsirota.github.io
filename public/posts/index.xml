@@ -11,21 +11,24 @@
     </image>
     <generator>Hugo -- 0.144.2</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 25 Feb 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Markdown Syntax Guide For L2</title>
-      <link>http://localhost:1313/posts/markdown-syntax.fr/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/markdown-syntax.fr/</guid>
-      <description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description>
-    </item>
-    <item>
-      <title>Markdown Syntax Guide For RTL</title>
-      <link>http://localhost:1313/posts/markdown-syntax.fa/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/markdown-syntax.fa/</guid>
-      <description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description>
+      <title>Tomoyo LSM installation</title>
+      <link>http://localhost:1313/posts/lsm/tomoyo-installation/</link>
+      <pubDate>Tue, 25 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/lsm/tomoyo-installation/</guid>
+      <description>&lt;h2 id=&#34;installing-tomoyo-on-ubuntu-240401&#34;&gt;Installing TOMOYO on Ubuntu 24.04.01&lt;/h2&gt;
+&lt;p&gt;First we check if kernel has TOMOYO enabled:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;grep tomoyo_write_inet_network /proc/kallsyms
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It should output something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;m&#34;&gt;0000000000000000&lt;/span&gt; T tomoyo_write_inet_network
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Outputing mean tomoyo LSM is compiled into the kernel, we do not have to activate it in the kernel which makes our job easier.&lt;/p&gt;
+&lt;h2 id=&#34;installing-dependencies&#34;&gt;Installing dependencies&lt;/h2&gt;
+&lt;p&gt;We need to install some dependencies before we can download and compile TOMOYO userspace tools.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo apt-get -y install wget patch gcc make libncurses-dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configuring-kernel&#34;&gt;Configuring kernel&lt;/h2&gt;
+&lt;p&gt;We can skip this part because our kernel already has TOMOYO enabled. If not we would have to download kernel sources and configure it. This part is covered in &lt;a href=&#34;https://tomoyo.sourceforge.net/2.6/chapter-3.html.en#3.1.3&#34;&gt;TOMOYO documentation&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Markdown Syntax Guide</title>

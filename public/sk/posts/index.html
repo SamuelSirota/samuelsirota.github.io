@@ -8,9 +8,9 @@
 <title>Posts | Samuel Sirota</title>
 <meta name="keywords" content="">
 <meta name="description" content="Posts - Samuel Sirota">
-<meta name="author" content="Samuel Sirota">
+<meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/sk/posts/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.28a6ab8ad96cabf8fdcab13decb72b59c3c81e00cdee4d32b4255b0f3795f2e6.css" integrity="sha256-KKaritlsq/j9yrE97LcrWcPIHgDN7k0ytCVbDzeV8uY=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.33dffbad7104c49ba9f73a012efc02d973588fa42b1a3093cdfb4d82642455d6.css" integrity="sha256-M9/7rXEExJup9zoBLvwC2XNYj6QrGjCTzftNgmQkVdY=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -174,6 +174,23 @@
     </a>
   </h1>
 </header>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Tomoyo LSM inštalácia
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Inštalácia TOMOYO na Ubuntu 24.04.01 Najprv skontrolujeme, či má jadro povolené TOMOYO:
+grep tomoyo_write_inet_network /proc/kallsyms Výpis by mal byť takýto:
+0000000000000000 T tomoyo_write_inet_network Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.
+Inštalácia závislostí Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.
+sudo apt-get -y install wget patch gcc make libncurses-dev Konfigurácia jadra Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v dokumentácii TOMOYO.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-02-25 00:00:00 +0000 UTC'>februára 25, 2025</span>&nbsp;·&nbsp;2 min</footer>
+  <a class="entry-link" aria-label="post link to Tomoyo LSM inštalácia" href="http://localhost:1313/sk/posts/lsm/tomoyo-installation/"></a>
+</article>
 
 <article class="post-entry"> 
   <header class="entry-header">

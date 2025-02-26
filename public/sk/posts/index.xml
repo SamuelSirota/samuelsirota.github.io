@@ -11,8 +11,25 @@
     </image>
     <generator>Hugo -- 0.144.2</generator>
     <language>sk</language>
-    <lastBuildDate>Sun, 10 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 25 Feb 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/sk/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tomoyo LSM inštalácia</title>
+      <link>http://localhost:1313/sk/posts/lsm/tomoyo-installation/</link>
+      <pubDate>Tue, 25 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/sk/posts/lsm/tomoyo-installation/</guid>
+      <description>&lt;h2 id=&#34;inštalácia-tomoyo-na-ubuntu-240401&#34;&gt;Inštalácia TOMOYO na Ubuntu 24.04.01&lt;/h2&gt;
+&lt;p&gt;Najprv skontrolujeme, či má jadro povolené TOMOYO:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;grep tomoyo_write_inet_network /proc/kallsyms
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Výpis by mal byť takýto:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;m&#34;&gt;0000000000000000&lt;/span&gt; T tomoyo_write_inet_network
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.&lt;/p&gt;
+&lt;h2 id=&#34;inštalácia-závislostí&#34;&gt;Inštalácia závislostí&lt;/h2&gt;
+&lt;p&gt;Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo apt-get -y install wget patch gcc make libncurses-dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;konfigurácia-jadra&#34;&gt;Konfigurácia jadra&lt;/h2&gt;
+&lt;p&gt;Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v &lt;a href=&#34;https://tomoyo.sourceforge.net/2.6/chapter-3.html.en#3.1.3&#34;&gt;dokumentácii TOMOYO&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Bohaty content and skratky</title>
       <link>http://localhost:1313/sk/posts/rich-content/</link>

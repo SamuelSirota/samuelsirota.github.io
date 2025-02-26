@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="sk" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Tomoyo LSM inštalácia | Samuel Sirota</title>
+<meta name="keywords" content="">
+<meta name="description" content="Inštalácia TOMOYO na Ubuntu 24.04.01
+Najprv skontrolujeme, či má jadro povolené TOMOYO:
+grep tomoyo_write_inet_network /proc/kallsyms
+Výpis by mal byť takýto:
+0000000000000000 T tomoyo_write_inet_network
+Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.
+Inštalácia závislostí
+Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.
+sudo apt-get -y install wget patch gcc make libncurses-dev
+Konfigurácia jadra
+Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v dokumentácii TOMOYO.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/sk/posts/lsm/tomoyo-installation/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.33dffbad7104c49ba9f73a012efc02d973588fa42b1a3093cdfb4d82642455d6.css" integrity="sha256-M9/7rXEExJup9zoBLvwC2XNYj6QrGjCTzftNgmQkVdY=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/lsm/tomoyo-installation/">
+<link rel="alternate" hreflang="sk" href="http://localhost:1313/sk/posts/lsm/tomoyo-installation/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="http://localhost:1313/sk/posts/lsm/tomoyo-installation/">
+  <meta property="og:site_name" content="Samuel Sirota">
+  <meta property="og:title" content="Tomoyo LSM inštalácia">
+  <meta property="og:description" content="Inštalácia TOMOYO na Ubuntu 24.04.01 Najprv skontrolujeme, či má jadro povolené TOMOYO:
+grep tomoyo_write_inet_network /proc/kallsyms Výpis by mal byť takýto:
+0000000000000000 T tomoyo_write_inet_network Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.
+Inštalácia závislostí Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.
+sudo apt-get -y install wget patch gcc make libncurses-dev Konfigurácia jadra Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v dokumentácii TOMOYO.">
+  <meta property="og:locale" content="sk">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-02-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-02-25T00:00:00+00:00">
+      <meta property="og:image" content="http://localhost:1313/images/papermod-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://localhost:1313/images/papermod-cover.png">
+<meta name="twitter:title" content="Tomoyo LSM inštalácia">
+<meta name="twitter:description" content="Inštalácia TOMOYO na Ubuntu 24.04.01
+Najprv skontrolujeme, či má jadro povolené TOMOYO:
+grep tomoyo_write_inet_network /proc/kallsyms
+Výpis by mal byť takýto:
+0000000000000000 T tomoyo_write_inet_network
+Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.
+Inštalácia závislostí
+Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.
+sudo apt-get -y install wget patch gcc make libncurses-dev
+Konfigurácia jadra
+Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v dokumentácii TOMOYO.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/sk/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Tomoyo LSM inštalácia",
+      "item": "http://localhost:1313/sk/posts/lsm/tomoyo-installation/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Tomoyo LSM inštalácia",
+  "name": "Tomoyo LSM inštalácia",
+  "description": "Inštalácia TOMOYO na Ubuntu 24.04.01 Najprv skontrolujeme, či má jadro povolené TOMOYO:\ngrep tomoyo_write_inet_network /proc/kallsyms Výpis by mal byť takýto:\n0000000000000000 T tomoyo_write_inet_network Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.\nInštalácia závislostí Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.\nsudo apt-get -y install wget patch gcc make libncurses-dev Konfigurácia jadra Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v dokumentácii TOMOYO.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Inštalácia TOMOYO na Ubuntu 24.04.01 Najprv skontrolujeme, či má jadro povolené TOMOYO:\ngrep tomoyo_write_inet_network /proc/kallsyms Výpis by mal byť takýto:\n0000000000000000 T tomoyo_write_inet_network Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.\nInštalácia závislostí Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.\nsudo apt-get -y install wget patch gcc make libncurses-dev Konfigurácia jadra Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v dokumentácii TOMOYO.\nInštalácia nástrojov používateľského priestoru Najprv si stiahneme nástroje zo sourceforge a overíme podpis pomocou kumaneko-key. Potom môžeme rozbaliť archív a skompilovať nástroje.\nwget https://sourceforge.net/projects/tomoyo/files/tomoyo-tools/2.6/tomoyo-tools-2.6.1-20241111.tar.gz wget https://sourceforge.net/projects/tomoyo/files/tomoyo-tools/2.6/tomoyo-tools-2.6.1-20241111.tar.gz.asc wget https://tomoyo.sourceforge.net/kumaneko-key gpg --import kumaneko-key gpg --verify tomoyo-tools-2.6.1-20241111.tar.gz.asc tar -zxf tomoyo-tools-2.6.1-20241111.tar.gz cd tomoyo-tools make -s USRLIBDIR=/usr/lib sudo make -s USRLIBDIR=/usr/lib install Inicializácia konfigurácie Tu pridáme nástroje tomoyo userspace tools do našej cesty PATH:\nexport PATH=$PATH:/usr/sbin Nie je to isté, ale pre istotu som to pridal do svojho .bashrc.\nĎalej sme inicializovali politiku:\nsudo /usr/lib/tomoyo/init_policy Mali by sme dostať viacero OK výstupov.\nKonfigurujeme zavádzač sudo nano /etc/default/grub Tu upravíme riadok GRUB_CMDLINE_LINUX tak, aby obsahoval security=tomoyo.\nGRUB_CMDLINE_LINUX=\"quiet splash security=tomoyo“ Potom aktualizujeme grub.\nsudo update-grub Reštartujeme Teraz reštartujeme systém:\nsudo reboot Po reštarte môžeme skontrolovať, či je TOMOYO povolené. Pomocou tohto príkazu:\ncat /sys/kernel/security/lsm Výstup by mal vyzerať asi takto:\nlsm=capability,yama,loadpin,safesetid,selinux,tomoyo Máme povolený a spustený systém TOMOYO. Teraz ho môžeme začať konfigurovať.\n",
+  "wordCount" : "244",
+  "inLanguage": "sk",
+  "image": "http://localhost:1313/images/papermod-cover.png","datePublished": "2025-02-25T00:00:00Z",
+  "dateModified": "2025-02-25T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/sk/posts/lsm/tomoyo-installation/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Samuel Sirota",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/sk/" accesskey="h" title="Samuel Sirota (Alt + H)">Samuel Sirota</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="http://localhost:1313/" title="🇬🇧"
+                            aria-label="🇬🇧">🇬🇧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/sk/posts/" title="Príspevky">
+                    <span>Príspevky</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/sk/o-mne/" title="O mne">
+                    <span>O mne</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/sk/hladat/" title="Hľadať">
+                    <span>Hľadať</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/sk/archiv/" title="Archív">
+                    <span>Archív</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/sk/tags/" title="Tagy">
+                    <span>Tagy</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/sk/">Domov</a>&nbsp;»&nbsp;<a href="http://localhost:1313/sk/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Tomoyo LSM inštalácia
+    </h1>
+    <div class="post-meta"><span title='2025-02-25 00:00:00 +0000 UTC'>februára 25, 2025</span>&nbsp;·&nbsp;2 min&nbsp;|&nbsp;Preklady:
+<ul class="i18n_list">
+    <li>
+        <a href="http://localhost:1313/posts/lsm/tomoyo-installation/">🇬🇧</a>
+    </li>
+</ul>&nbsp;|&nbsp;<a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/posts/LSM/tomoyo-installation.sk.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Obsah</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#in%c5%a1tal%c3%a1cia-tomoyo-na-ubuntu-240401" aria-label="Inštalácia TOMOYO na Ubuntu 24.04.01">Inštalácia TOMOYO na Ubuntu 24.04.01</a></li>
+                <li>
+                    <a href="#in%c5%a1tal%c3%a1cia-z%c3%a1vislost%c3%ad" aria-label="Inštalácia závislostí">Inštalácia závislostí</a></li>
+                <li>
+                    <a href="#konfigur%c3%a1cia-jadra" aria-label="Konfigurácia jadra">Konfigurácia jadra</a></li>
+                <li>
+                    <a href="#in%c5%a1tal%c3%a1cia-n%c3%a1strojov-pou%c5%be%c3%advate%c4%besk%c3%a9ho-priestoru" aria-label="Inštalácia nástrojov používateľského priestoru">Inštalácia nástrojov používateľského priestoru</a></li>
+                <li>
+                    <a href="#inicializ%c3%a1cia-konfigur%c3%a1cie" aria-label="Inicializácia konfigurácie">Inicializácia konfigurácie</a></li>
+                <li>
+                    <a href="#konfigurujeme-zav%c3%a1dza%c4%8d" aria-label="Konfigurujeme zavádzač">Konfigurujeme zavádzač</a></li>
+                <li>
+                    <a href="#re%c5%a1tartujeme" aria-label="Reštartujeme">Reštartujeme</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="inštalácia-tomoyo-na-ubuntu-240401">Inštalácia TOMOYO na Ubuntu 24.04.01<a hidden class="anchor" aria-hidden="true" href="#inštalácia-tomoyo-na-ubuntu-240401">#</a></h2>
+<p>Najprv skontrolujeme, či má jadro povolené TOMOYO:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">grep tomoyo_write_inet_network /proc/kallsyms
+</span></span></code></pre></div><p>Výpis by mal byť takýto:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="m">0000000000000000</span> T tomoyo_write_inet_network
+</span></span></code></pre></div><p>Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.</p>
+<h2 id="inštalácia-závislostí">Inštalácia závislostí<a hidden class="anchor" aria-hidden="true" href="#inštalácia-závislostí">#</a></h2>
+<p>Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt-get -y install wget patch gcc make libncurses-dev
+</span></span></code></pre></div><h2 id="konfigurácia-jadra">Konfigurácia jadra<a hidden class="anchor" aria-hidden="true" href="#konfigurácia-jadra">#</a></h2>
+<p>Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v <a href="https://tomoyo.sourceforge.net/2.6/chapter-3.html.en#3.1.3">dokumentácii TOMOYO</a>.</p>
+<h2 id="inštalácia-nástrojov-používateľského-priestoru">Inštalácia nástrojov používateľského priestoru<a hidden class="anchor" aria-hidden="true" href="#inštalácia-nástrojov-používateľského-priestoru">#</a></h2>
+<p>Najprv si stiahneme nástroje zo sourceforge a overíme podpis pomocou kumaneko-key.
+Potom môžeme rozbaliť archív a skompilovať nástroje.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://sourceforge.net/projects/tomoyo/files/tomoyo-tools/2.6/tomoyo-tools-2.6.1-20241111.tar.gz
+</span></span><span class="line"><span class="cl">wget https://sourceforge.net/projects/tomoyo/files/tomoyo-tools/2.6/tomoyo-tools-2.6.1-20241111.tar.gz.asc
+</span></span><span class="line"><span class="cl">wget https://tomoyo.sourceforge.net/kumaneko-key
+</span></span><span class="line"><span class="cl">gpg --import kumaneko-key
+</span></span><span class="line"><span class="cl">gpg --verify tomoyo-tools-2.6.1-20241111.tar.gz.asc
+</span></span><span class="line"><span class="cl">tar -zxf tomoyo-tools-2.6.1-20241111.tar.gz
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> tomoyo-tools
+</span></span><span class="line"><span class="cl">make -s <span class="nv">USRLIBDIR</span><span class="o">=</span>/usr/lib
+</span></span><span class="line"><span class="cl">sudo make -s <span class="nv">USRLIBDIR</span><span class="o">=</span>/usr/lib install
+</span></span></code></pre></div><h2 id="inicializácia-konfigurácie">Inicializácia konfigurácie<a hidden class="anchor" aria-hidden="true" href="#inicializácia-konfigurácie">#</a></h2>
+<p>Tu pridáme nástroje tomoyo userspace tools do našej cesty PATH:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/usr/sbin
+</span></span></code></pre></div><p>Nie je to isté, ale pre istotu som to pridal do svojho <code>.bashrc</code>.</p>
+<p>Ďalej sme inicializovali politiku:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo /usr/lib/tomoyo/init_policy
+</span></span></code></pre></div><p>Mali by sme dostať viacero OK výstupov.</p>
+<h2 id="konfigurujeme-zavádzač">Konfigurujeme zavádzač<a hidden class="anchor" aria-hidden="true" href="#konfigurujeme-zavádzač">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo nano /etc/default/grub
+</span></span></code></pre></div><p>Tu upravíme riadok <code>GRUB_CMDLINE_LINUX</code> tak, aby obsahoval <code>security=tomoyo</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">GRUB_CMDLINE_LINUX</span><span class="o">=</span><span class="s2">&#34;quiet splash security=tomoyo“
+</span></span></span></code></pre></div><p>Potom aktualizujeme grub.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo update-grub
+</span></span></code></pre></div><h2 id="reštartujeme">Reštartujeme<a hidden class="anchor" aria-hidden="true" href="#reštartujeme">#</a></h2>
+<p>Teraz reštartujeme systém:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo reboot
+</span></span></code></pre></div><p>Po reštarte môžeme skontrolovať, či je TOMOYO povolené. Pomocou tohto príkazu:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cat /sys/kernel/security/lsm
+</span></span></code></pre></div><p>Výstup by mal vyzerať asi takto:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">lsm</span><span class="o">=</span>capability,yama,loadpin,safesetid,selinux,tomoyo
+</span></span></code></pre></div><p>Máme povolený a spustený systém TOMOYO. Teraz ho môžeme začať konfigurovať.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/sk/">Samuel Sirota</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'kopírovať';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'skopírované!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'kopírovať';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
