@@ -1,6 +1,6 @@
 ---
 title: "Archiv"
 layout: "archives"
-url: "/sk/archiv"
+url: "/sk/archives"
 summary: "archives"
 ---

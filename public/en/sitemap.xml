@@ -4,6 +4,16 @@
   <url>
     <loc>http://localhost:1313/about-me/</loc>
     <lastmod>2025-02-25T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sk"
+                href="http://localhost:1313/sk/about-me/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/about-me/"
+                />
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
     <lastmod>2025-02-25T00:00:00+00:00</lastmod>
@@ -126,7 +136,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sk"
-                href="http://localhost:1313/sk/archiv/"
+                href="http://localhost:1313/sk/archives/"
                 />
     <xhtml:link
                 rel="alternate"
