@@ -20,7 +20,7 @@ Konfigurácia jadra
 Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v dokumentácii TOMOYO.">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/sk/posts/lsm/tomoyo-installation/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.f09ce73e6be6abb5eff872fbb1f50ca5ab5f9da3e952b675d00fdc4607330f9a.css" integrity="sha256-8JznPmvmq7Xv&#43;HL7sfUMpatfnaPpUrZ10A/cRgczD5o=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.448b4c86e045664a722163802d0434f32bf5e7150f65a4dd5ed1dfe0cbbca35d.css" integrity="sha256-RItMhuBFZkpyIWOALQQ08yv15xUPZaTdXtHf4Mu8o10=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -79,9 +79,9 @@ sudo apt-get -y install wget patch gcc make libncurses-dev Konfigurácia jadra T
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-02-25T00:00:00+00:00">
     <meta property="article:modified_time" content="2025-02-25T00:00:00+00:00">
-      <meta property="og:image" content="http://localhost:1313/images/papermod-cover.png">
+      <meta property="og:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://localhost:1313/images/papermod-cover.png">
+<meta name="twitter:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
 <meta name="twitter:title" content="Tomoyo LSM inštalácia">
 <meta name="twitter:description" content="Inštalácia TOMOYO na Ubuntu 24.04.01
 Najprv skontrolujeme, či má jadro povolené TOMOYO:
@@ -129,7 +129,7 @@ Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivovan
   "articleBody": "Inštalácia TOMOYO na Ubuntu 24.04.01 Najprv skontrolujeme, či má jadro povolené TOMOYO:\ngrep tomoyo_write_inet_network /proc/kallsyms Výpis by mal byť takýto:\n0000000000000000 T tomoyo_write_inet_network Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.\nInštalácia závislostí Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.\nsudo apt-get -y install wget patch gcc make libncurses-dev Konfigurácia jadra Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v dokumentácii TOMOYO.\nInštalácia nástrojov používateľského priestoru Najprv si stiahneme nástroje zo sourceforge a overíme podpis pomocou kumaneko-key. Potom môžeme rozbaliť archív a skompilovať nástroje.\nwget https://sourceforge.net/projects/tomoyo/files/tomoyo-tools/2.6/tomoyo-tools-2.6.1-20241111.tar.gz wget https://sourceforge.net/projects/tomoyo/files/tomoyo-tools/2.6/tomoyo-tools-2.6.1-20241111.tar.gz.asc wget https://tomoyo.sourceforge.net/kumaneko-key gpg --import kumaneko-key gpg --verify tomoyo-tools-2.6.1-20241111.tar.gz.asc tar -zxf tomoyo-tools-2.6.1-20241111.tar.gz cd tomoyo-tools make -s USRLIBDIR=/usr/lib sudo make -s USRLIBDIR=/usr/lib install Inicializácia konfigurácie Tu pridáme nástroje tomoyo userspace tools do našej cesty PATH:\nexport PATH=$PATH:/usr/sbin Nie je to isté, ale pre istotu som to pridal do svojho .bashrc.\nĎalej sme inicializovali politiku:\nsudo /usr/lib/tomoyo/init_policy Mali by sme dostať viacero OK výstupov.\nKonfigurujeme zavádzač sudo nano /etc/default/grub Tu upravíme riadok GRUB_CMDLINE_LINUX tak, aby obsahoval security=tomoyo.\nGRUB_CMDLINE_LINUX=\"quiet splash security=tomoyo“ Potom aktualizujeme grub.\nsudo update-grub Reštartujeme Teraz reštartujeme systém:\nsudo reboot Po reštarte môžeme skontrolovať, či je TOMOYO povolené. Pomocou tohto príkazu:\ncat /sys/kernel/security/lsm Výstup by mal vyzerať asi takto:\nlsm=capability,yama,loadpin,safesetid,selinux,tomoyo Máme povolený a spustený systém TOMOYO. Teraz ho môžeme začať konfigurovať.\n",
   "wordCount" : "244",
   "inLanguage": "sk",
-  "image": "http://localhost:1313/images/papermod-cover.png","datePublished": "2025-02-25T00:00:00Z",
+  "image": "http://localhost:1313/images/sensei_penguin_cropped.png","datePublished": "2025-02-25T00:00:00Z",
   "dateModified": "2025-02-25T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",

@@ -44,7 +44,7 @@ languages:
       profileMode:
         enabled: true
         title: Samuel Sirota
-        imageUrl: "https://raw.githubusercontent.com/googlefonts/noto-emoji/master/svg/emoji_u1f9d1_1f3fb_200d_1f4bb.svg"
+        imageUrl: "images/sensei_penguin_cropped.png"
         imageTitle: image
         # imageWidth: 120
         # imageHeight: 120
@@ -85,7 +85,7 @@ languages:
       profileMode:
         enabled: true
         title: Samuel Sirota
-        imageUrl: "https://raw.githubusercontent.com/googlefonts/noto-emoji/master/svg/emoji_u1f9d1_1f3fb_200d_1f4bb.svg"
+        imageUrl: "images/sensei_penguin_cropped.png"
         imageTitle: obrazok
         # imageWidth: 120
         # imageHeight: 120
@@ -122,7 +122,7 @@ params:
   ShowPageNums: true
   ShowToc: true
   # comments: false
-  images: ["images/papermod-cover.png"]
+  images: ["images/sensei_penguin_cropped.png"]
 
   profileMode:
     enabled: false

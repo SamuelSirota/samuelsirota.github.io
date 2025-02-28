@@ -6,8 +6,8 @@
     <description>Recent content in Tags on Samuel Sirota</description>
     <image>
       <title>Samuel Sirota</title>
-      <url>http://localhost:1313/images/papermod-cover.png</url>
-      <link>http://localhost:1313/images/papermod-cover.png</link>
+      <url>http://localhost:1313/images/sensei_penguin_cropped.png</url>
+      <link>http://localhost:1313/images/sensei_penguin_cropped.png</link>
     </image>
     <generator>Hugo -- 0.144.2</generator>
     <language>en</language>
@@ -74,13 +74,6 @@
       <link>http://localhost:1313/tags/syntax/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/syntax/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Emoji</title>
-      <link>http://localhost:1313/tags/emoji/</link>
-      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/emoji/</guid>
       <description></description>
     </item>
   </channel>
