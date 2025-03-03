@@ -204,6 +204,27 @@ sudo apt-get -y install wget patch gcc make libncurses-dev Konfigurácia jadra T
   <footer class="entry-footer"><span title='2024-03-10 00:00:00 +0000 UTC'>marca 10, 2024</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;Hugo Authors, PaperMod Contributors</footer>
   <a class="entry-link" aria-label="post link to Bohaty content and skratky" href="http://localhost:1313/sk/posts/rich-content/"></a>
 </article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>TOMOYO Postup prechodu domény Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény
+Príklad: Proces v &lt;kernel&gt; /sbin/init chce spustiť /usr/bin/calc
+Krok 1: Získanie názvu cesty programu Získajte úplnú cestu programu [candidate]
+môže byť symlink
+Príklad:
+/usr/bin/calc → [candidate] = „/usr/bin/calc“ Krok 2: Kontrola smernice agregátora Skontrolujte politiku výnimiek pre agregator [candidate] [pathname]
+Ak sa nájde, nahraďte [candidate] za [pathname]
+Príklad:
+aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [candidate]
+...</p>
+  </div>
+  <footer class="entry-footer">3 min</footer>
+  <a class="entry-link" aria-label="post link to " href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/"></a>
+</article>
     </main>
     
 <footer class="footer">

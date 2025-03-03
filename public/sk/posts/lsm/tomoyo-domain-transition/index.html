@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="sk" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Tomoyo LSM prechody domén | Samuel Sirota</title>
+<meta name="keywords" content="">
+<meta name="description" content="Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény
+Príklad: Proces v &lt;kernel&gt; /sbin/init chce spustiť /usr/bin/calc
+Krok 1: Získanie názvu cesty programu
+
+
+Získajte úplnú cestu programu [candidate]
+
+
+môže byť symlink
+
+
+Príklad:
+/usr/bin/calc → [candidate] = „/usr/bin/calc“
+
+
+Krok 2: Kontrola smernice agregátora
+
+
+Skontrolujte politiku výnimiek pre agregator [candidate] [pathname]
+
+
+Ak sa nájde, nahraďte [candidate] za [pathname]
+
+
+Príklad:
+aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“
+
+
+Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [candidate]">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.448b4c86e045664a722163802d0434f32bf5e7150f65a4dd5ed1dfe0cbbca35d.css" integrity="sha256-RItMhuBFZkpyIWOALQQ08yv15xUPZaTdXtHf4Mu8o10=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">
+<link rel="alternate" hreflang="sk" href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">
+  <meta property="og:site_name" content="Samuel Sirota">
+  <meta property="og:title" content="Tomoyo LSM prechody domén">
+  <meta property="og:description" content="Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény
+Príklad: Proces v &lt;kernel&gt; /sbin/init chce spustiť /usr/bin/calc
+Krok 1: Získanie názvu cesty programu Získajte úplnú cestu programu [candidate]
+môže byť symlink
+Príklad:
+/usr/bin/calc → [candidate] = „/usr/bin/calc“ Krok 2: Kontrola smernice agregátora Skontrolujte politiku výnimiek pre agregator [candidate] [pathname]
+Ak sa nájde, nahraďte [candidate] za [pathname]
+Príklad:
+aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [candidate]">
+  <meta property="og:locale" content="sk">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-03-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-03-03T00:00:00+00:00">
+      <meta property="og:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+<meta name="twitter:title" content="Tomoyo LSM prechody domén">
+<meta name="twitter:description" content="Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény
+Príklad: Proces v &lt;kernel&gt; /sbin/init chce spustiť /usr/bin/calc
+Krok 1: Získanie názvu cesty programu
+
+
+Získajte úplnú cestu programu [candidate]
+
+
+môže byť symlink
+
+
+Príklad:
+/usr/bin/calc → [candidate] = „/usr/bin/calc“
+
+
+Krok 2: Kontrola smernice agregátora
+
+
+Skontrolujte politiku výnimiek pre agregator [candidate] [pathname]
+
+
+Ak sa nájde, nahraďte [candidate] za [pathname]
+
+
+Príklad:
+aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“
+
+
+Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [candidate]">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/sk/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Tomoyo LSM prechody domén",
+      "item": "http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Tomoyo LSM prechody domén",
+  "name": "Tomoyo LSM prechody domén",
+  "description": "Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény\nPríklad: Proces v \u0026lt;kernel\u0026gt; /sbin/init chce spustiť /usr/bin/calc\nKrok 1: Získanie názvu cesty programu Získajte úplnú cestu programu [candidate]\nmôže byť symlink\nPríklad:\n/usr/bin/calc → [candidate] = „/usr/bin/calc“ Krok 2: Kontrola smernice agregátora Skontrolujte politiku výnimiek pre agregator [candidate] [pathname]\nAk sa nájde, nahraďte [candidate] za [pathname]\nPríklad:\naggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [candidate]\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény\nPríklad: Proces v /sbin/init chce spustiť /usr/bin/calc\nKrok 1: Získanie názvu cesty programu Získajte úplnú cestu programu [candidate]\nmôže byť symlink\nPríklad:\n/usr/bin/calc → [candidate] = „/usr/bin/calc“ Krok 2: Kontrola smernice agregátora Skontrolujte politiku výnimiek pre agregator [candidate] [pathname]\nAk sa nájde, nahraďte [candidate] za [pathname]\nPríklad:\naggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [candidate]\nKrok 3: Kontrola smernice file execute Vyhľadajte v politike aktuálnej domény (napr. /sbin/init) príkaz file execute [candidate] ...\nMožnosti (nastaví [destination], prejde na krok 5):\nfile execute [candidate] keep → zostať v /sbin/init\nfile execute [candidate] child → /sbin/init /usr/bin/calc\nfile execute [candidate] reset → /usr/bin/calc\nfile execute [candidate] initialize → /usr/bin/calc (menný priestor root)\nfile execute [candidate] parent → (nadradená doména)\nfile execute [candidate] [názov domény] → vlastná doména (napr. /usr/bin/game)\nfile execute [candidate] [pathname] → /sbin/init /some/path\nfile execute [candidate] → bez modifikátora, prejdite na krok 4\nFail: Žiadne pravidlo + vynucovací mód → Deny\nPríklad:\nfile execute /usr/bin/calc reset → [destination] = /usr/bin/calc Krok 4: Určenie predvoleného prechodu domény Ak sa v kroku 3 nenastavil [destination], skontrolujte politiku výnimiek v poradí: reset_domain [candidate] z [source] (alebo „any“) + no_reset_domain → /usr/bin/calc, skok na Krok 5 initialize_domain [candidate] z [source] (alebo „any“) + no no_initialize_domain → /usr/bin/calc, skok na krok 5 keep_domain [candidate] z [source] (alebo „any“) + no no_keep_domain → /sbin/init, skok na krok 5 Default → /sbin/init /usr/bin/calc Príklad:\ninitialize_domain /usr/bin/calc → [destination] = /usr/bin/calc Náhradný plán, ak bol krok 3 nejasný\nKrok 5: Vytvorenie cieľovej domény Nastavte [destination] z kroku 3 alebo 4 Prípady zlyhania: Pravidlo kroku 3, nemožno vytvoriť → Odmietnuť reset_domain → Deny Krok 4 predvolený + vynucovací režim → Deny Krok 4 predvolený + iný režim → vykonávanie pokračuje, ale zostáva v aktuálnej doméne, označte smernicu transition_failed Krok 6: Kontrola premenných prostredia Overte premenné prostredia (napr. PATH) v [destination]\nak je \u003e1 env var zamietnutá + vynucovací režim → Deny\nPríklad:\nLD_PRELOAD“ zamietnutý v ‚ /usr/bin/calc‘ → Deny ak vynucovanie Krok 7: Kontrola interpretov Ak program potrebuje interpreter (napr. /bin/bash pre skript), skontrolujte oprávnenie na čítanie v [destination]\nak je čítanie pre interpret zamietnuté + vynucovanie režimu → Deny\nPríklad:\n/usr/bin/calc potrebuje /bin/bash, čítanie v /bin/bash zamietnuté → zlyhanie, ak vynucovanie Krok 8: Spustenie programu Spustite program, ak je úspešný, prepnite na [destination] Príklad: /usr/bin/calc spustí sa → proces sa presunie do /usr/bin/calc Úspech = prechod dokončený Diagram prechodov domény Začiatok: /sbin/init 1. Získajte /usr/bin/calc 2. Agregátor? → Nie 3. Spustenie súboru? - Áno → Nastaviť [destination] → Prejsť na 5 - Nie → 4. Predvolené nastavenia? - reset_domain → /usr/bin/calc - initialize_domain → /usr/bin/calc - keep_domain → /sbin/init - Predvolené nastavenie → /sbin/init /usr/bin/calc 5. Vytvoriť [destination] - Áno → 6. Env vars v poriadku? - Áno → 7. Interpreter v poriadku? - Áno → 8. Spustenie a prechod ÚSPECH - Nie → DENY (enforcing mode) - Nie → ODMIETNÚŤ (enforcing mode) - Nie → ODMIETNÚŤ alebo zostať v aktuálnej doméne Príklad scenára /sbin/init, chce prejsť na /usr/bin/calc Politika: file execute /usr/bin/calc inicializovať, enforcing mode Kroky: [candidate] = „/usr/bin/calc“ Žiadny agregátor initialize → [destination] = /usr/bin/calc, skok na 5 Vytvoriť /usr/bin/calc Env vars v poriadku → Áno Žiadne problémy s interpreterom → Áno Spustenie → Prechod na /usr/bin/calc Pripojenie poznámok Kľúčové pojmy: [candidate]: Cesta k programu [destination]: Nová doména [current_domain]: doména (napr. /sbin/init) [current_namespace]: Koreň ako Priorita: Krok 3 \u003e Krok 4 (špecifické pravidlá prekonávajú predvolené) Režim vynucovania: Striktné zakázanie pri zlyhaní ",
+  "wordCount" : "616",
+  "inLanguage": "sk",
+  "image": "http://localhost:1313/images/sensei_penguin_cropped.png","datePublished": "2025-03-03T00:00:00Z",
+  "dateModified": "2025-03-03T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Samuel Sirota",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/sk/" accesskey="h" title="Samuel Sirota (Alt + H)">Samuel Sirota</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="http://localhost:1313/" title="🇬🇧"
+                            aria-label="🇬🇧">🇬🇧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/sk/posts/" title="Príspevky">
+                    <span>Príspevky</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/sk/about-me/" title="O mne">
+                    <span>O mne</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/sk/hladat/" title="Hľadať">
+                    <span>Hľadať</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/sk/archives/" title="Archív">
+                    <span>Archív</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/sk/tags/" title="Tagy">
+                    <span>Tagy</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/sk/">Domov</a>&nbsp;»&nbsp;<a href="http://localhost:1313/sk/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Tomoyo LSM prechody domén
+    </h1>
+    <div class="post-meta"><span title='2025-03-03 00:00:00 +0000 UTC'>marca 3, 2025</span>&nbsp;·&nbsp;3 min&nbsp;|&nbsp;Preklady:
+<ul class="i18n_list">
+    <li>
+        <a href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">🇬🇧</a>
+    </li>
+</ul>&nbsp;|&nbsp;<a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/posts/LSM/tomoyo-domain-transition.sk.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Obsah</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#krok-1-z%c3%adskanie-n%c3%a1zvu-cesty-programu" aria-label="Krok 1: Získanie názvu cesty programu">Krok 1: Získanie názvu cesty programu</a></li>
+                <li>
+                    <a href="#krok-2-kontrola-smernice-agreg%c3%a1tora" aria-label="Krok 2: Kontrola smernice agregátora">Krok 2: Kontrola smernice agregátora</a></li>
+                <li>
+                    <a href="#krok-3-kontrola-smernice-file-execute" aria-label="Krok 3: Kontrola smernice file execute">Krok 3: Kontrola smernice file execute</a></li>
+                <li>
+                    <a href="#krok-4-ur%c4%8denie-predvolen%c3%a9ho-prechodu-dom%c3%a9ny" aria-label="Krok 4: Určenie predvoleného prechodu domény">Krok 4: Určenie predvoleného prechodu domény</a></li>
+                <li>
+                    <a href="#krok-5-vytvorenie-cie%c4%beovej-dom%c3%a9ny" aria-label="Krok 5: Vytvorenie cieľovej domény">Krok 5: Vytvorenie cieľovej domény</a></li>
+                <li>
+                    <a href="#krok-6-kontrola-premenn%c3%bdch-prostredia" aria-label="Krok 6: Kontrola premenných prostredia">Krok 6: Kontrola premenných prostredia</a></li>
+                <li>
+                    <a href="#krok-7-kontrola-interpretov" aria-label="Krok 7: Kontrola interpretov">Krok 7: Kontrola interpretov</a></li>
+                <li>
+                    <a href="#krok-8-spustenie-programu" aria-label="Krok 8: Spustenie programu">Krok 8: Spustenie programu</a></li>
+                <li>
+                    <a href="#diagram-prechodov-dom%c3%a9ny" aria-label="Diagram prechodov domény">Diagram prechodov domény</a></li>
+                <li>
+                    <a href="#pr%c3%adklad-scen%c3%a1ra" aria-label="Príklad scenára">Príklad scenára</a></li>
+                <li>
+                    <a href="#pripojenie-pozn%c3%a1mok" aria-label="Pripojenie poznámok">Pripojenie poznámok</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom <code>execve()</code>) a prepínať domény</p>
+<p><strong>Príklad:</strong> Proces v <code>&lt;kernel&gt; /sbin/init</code> chce spustiť <code>/usr/bin/calc</code></p>
+<h2 id="krok-1-získanie-názvu-cesty-programu">Krok 1: Získanie názvu cesty programu<a hidden class="anchor" aria-hidden="true" href="#krok-1-získanie-názvu-cesty-programu">#</a></h2>
+<ul>
+<li>
+<p>Získajte úplnú cestu programu <code>[candidate]</code></p>
+</li>
+<li>
+<p>môže byť symlink</p>
+</li>
+<li>
+<p><strong>Príklad:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/usr/bin/calc → [candidate] = „/usr/bin/calc“
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="krok-2-kontrola-smernice-agregátora">Krok 2: Kontrola smernice agregátora<a hidden class="anchor" aria-hidden="true" href="#krok-2-kontrola-smernice-agregátora">#</a></h2>
+<ul>
+<li>
+<p>Skontrolujte politiku výnimiek pre <code>agregator [candidate] [pathname]</code></p>
+</li>
+<li>
+<p>Ak sa nájde, nahraďte <code>[candidate]</code> za <code>[pathname]</code></p>
+</li>
+<li>
+<p><strong>Príklad:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“
+</span></span></code></pre></div></li>
+<li>
+<p>Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný <code>[candidate]</code></p>
+</li>
+</ul>
+<h2 id="krok-3-kontrola-smernice-file-execute">Krok 3: Kontrola smernice <code>file execute</code><a hidden class="anchor" aria-hidden="true" href="#krok-3-kontrola-smernice-file-execute">#</a></h2>
+<ul>
+<li>
+<p>Vyhľadajte v politike aktuálnej domény (napr. <code>&lt;kernel&gt; /sbin/init</code>) príkaz <code>file execute [candidate] ...</code></p>
+</li>
+<li>
+<p><strong>Možnosti (nastaví <code>[destination]</code>, prejde na krok 5):</strong></p>
+</li>
+<li>
+<p><code>file execute [candidate] keep</code> → zostať v <code>&lt;kernel&gt; /sbin/init</code></p>
+</li>
+<li>
+<p><code>file execute [candidate] child</code> → <code>&lt;kernel&gt; /sbin/init /usr/bin/calc</code></p>
+</li>
+<li>
+<p><code>file execute [candidate] reset</code> → <code>&lt;kernel&gt; /usr/bin/calc</code></p>
+</li>
+<li>
+<p><code>file execute [candidate] initialize</code> → <code>&lt;kernel&gt; /usr/bin/calc</code> (menný priestor root)</p>
+</li>
+<li>
+<p><code>file execute [candidate] parent</code> → <code>&lt;kernel&gt;</code> (nadradená doména)</p>
+</li>
+<li>
+<p><code>file execute [candidate] [názov domény]</code> → vlastná doména (napr. <code>&lt;kernel&gt; /usr/bin/game</code>)</p>
+</li>
+<li>
+<p><code>file execute [candidate] [pathname]</code> → <code>&lt;kernel&gt; /sbin/init /some/path</code></p>
+</li>
+<li>
+<p><code>file execute [candidate]</code> → bez modifikátora, prejdite na krok 4</p>
+</li>
+<li>
+<p><strong>Fail:</strong> Žiadne pravidlo + vynucovací mód → Deny</p>
+</li>
+<li>
+<p><strong>Príklad:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">file execute /usr/bin/calc reset → [destination] = &lt;kernel&gt; /usr/bin/calc
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="krok-4-určenie-predvoleného-prechodu-domény">Krok 4: Určenie predvoleného prechodu domény<a hidden class="anchor" aria-hidden="true" href="#krok-4-určenie-predvoleného-prechodu-domény">#</a></h2>
+<ul>
+<li>Ak sa v kroku 3 nenastavil <code>[destination]</code>, skontrolujte politiku výnimiek v poradí:</li>
+</ul>
+<ol>
+<li><code>reset_domain [candidate] z [source] (alebo „any“) + no_reset_domain</code> → <code>&lt;kernel&gt; /usr/bin/calc</code>, skok na Krok 5</li>
+<li><code>initialize_domain [candidate] z [source] (alebo „any“) + no no_initialize_domain</code> → <code>&lt;kernel&gt; /usr/bin/calc</code>, skok na krok 5</li>
+<li><code>keep_domain [candidate] z [source] (alebo „any“) + no no_keep_domain</code> → <code>&lt;kernel&gt; /sbin/init</code>, skok na krok 5</li>
+<li><strong>Default</strong> → <code>&lt;kernel&gt; /sbin/init /usr/bin/calc</code></li>
+</ol>
+<ul>
+<li>
+<p><strong>Príklad:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">initialize_domain /usr/bin/calc → [destination] = &lt;kernel&gt; /usr/bin/calc
+</span></span></code></pre></div></li>
+<li>
+<p>Náhradný plán, ak bol krok 3 nejasný</p>
+</li>
+</ul>
+<h2 id="krok-5-vytvorenie-cieľovej-domény">Krok 5: Vytvorenie cieľovej domény<a hidden class="anchor" aria-hidden="true" href="#krok-5-vytvorenie-cieľovej-domény">#</a></h2>
+<ul>
+<li>Nastavte <code>[destination]</code> z kroku 3 alebo 4</li>
+<li><strong>Prípady zlyhania:</strong>
+<ul>
+<li>Pravidlo kroku 3, nemožno vytvoriť → Odmietnuť</li>
+<li><code>reset_domain</code> → Deny</li>
+<li>Krok 4 predvolený + vynucovací režim → Deny</li>
+</ul>
+</li>
+<li>Krok 4 predvolený + iný režim → vykonávanie pokračuje, ale zostáva v aktuálnej doméne, označte smernicu <code>transition_failed</code></li>
+</ul>
+<h2 id="krok-6-kontrola-premenných-prostredia">Krok 6: Kontrola premenných prostredia<a hidden class="anchor" aria-hidden="true" href="#krok-6-kontrola-premenných-prostredia">#</a></h2>
+<ul>
+<li>
+<p>Overte premenné prostredia (napr. <code>PATH</code>) v <code>[destination]</code></p>
+</li>
+<li>
+<p>ak je &gt;1 env var zamietnutá + vynucovací režim → Deny</p>
+</li>
+<li>
+<p><strong>Príklad:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">LD_PRELOAD“ zamietnutý v ‚&lt;kernel&gt; /usr/bin/calc‘ → Deny ak vynucovanie
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="krok-7-kontrola-interpretov">Krok 7: Kontrola interpretov<a hidden class="anchor" aria-hidden="true" href="#krok-7-kontrola-interpretov">#</a></h2>
+<ul>
+<li>
+<p>Ak program potrebuje interpreter (napr. <code>/bin/bash</code> pre skript), skontrolujte oprávnenie na čítanie v <code>[destination]</code></p>
+</li>
+<li>
+<p>ak je čítanie pre interpret zamietnuté + vynucovanie režimu → Deny</p>
+</li>
+<li>
+<p><strong>Príklad:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/usr/bin/calc potrebuje /bin/bash, čítanie v /bin/bash zamietnuté → zlyhanie, ak vynucovanie
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="krok-8-spustenie-programu">Krok 8: Spustenie programu<a hidden class="anchor" aria-hidden="true" href="#krok-8-spustenie-programu">#</a></h2>
+<ul>
+<li>Spustite program, ak je úspešný, prepnite na <code>[destination]</code></li>
+<li><strong>Príklad:</strong> <code>/usr/bin/calc</code> spustí sa → proces sa presunie do <code>&lt;kernel&gt; /usr/bin/calc</code></li>
+<li>Úspech = prechod dokončený</li>
+</ul>
+<h2 id="diagram-prechodov-domény">Diagram prechodov domény<a hidden class="anchor" aria-hidden="true" href="#diagram-prechodov-domény">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Začiatok: &lt;kernel&gt; /sbin/init
+</span></span><span class="line"><span class="cl">1. Získajte /usr/bin/calc
+</span></span><span class="line"><span class="cl">2. Agregátor? → Nie
+</span></span><span class="line"><span class="cl">3. Spustenie súboru?
+</span></span><span class="line"><span class="cl">    - Áno → Nastaviť [destination] → Prejsť na 5
+</span></span><span class="line"><span class="cl">    - Nie → 4. Predvolené nastavenia?
+</span></span><span class="line"><span class="cl">        - reset_domain → &lt;kernel&gt; /usr/bin/calc
+</span></span><span class="line"><span class="cl">        - initialize_domain → &lt;kernel&gt; /usr/bin/calc
+</span></span><span class="line"><span class="cl">        - keep_domain → &lt;kernel&gt; /sbin/init
+</span></span><span class="line"><span class="cl">        - Predvolené nastavenie → &lt;kernel&gt; /sbin/init /usr/bin/calc
+</span></span><span class="line"><span class="cl">5. Vytvoriť [destination]
+</span></span><span class="line"><span class="cl">    - Áno → 6. Env vars v poriadku?
+</span></span><span class="line"><span class="cl">        - Áno → 7. Interpreter v poriadku?
+</span></span><span class="line"><span class="cl">            - Áno → 8. Spustenie a prechod ÚSPECH
+</span></span><span class="line"><span class="cl">            - Nie → DENY (enforcing mode)
+</span></span><span class="line"><span class="cl">        - Nie → ODMIETNÚŤ (enforcing mode)
+</span></span><span class="line"><span class="cl">    - Nie → ODMIETNÚŤ alebo zostať v aktuálnej doméne
+</span></span></code></pre></div><h2 id="príklad-scenára">Príklad scenára<a hidden class="anchor" aria-hidden="true" href="#príklad-scenára">#</a></h2>
+<ul>
+<li><code>&lt;kernel&gt; /sbin/init</code>, chce prejsť na <code>/usr/bin/calc</code></li>
+<li>Politika: <code>file execute /usr/bin/calc inicializovať</code>, enforcing mode</li>
+<li><strong>Kroky:</strong>
+<ol>
+<li><code>[candidate] = „/usr/bin/calc“</code></li>
+<li>Žiadny agregátor</li>
+<li><code>initialize</code> → <code>[destination] = &lt;kernel&gt; /usr/bin/calc</code>, skok na 5</li>
+<li>Vytvoriť <code>&lt;kernel&gt; /usr/bin/calc</code></li>
+<li>Env vars v poriadku → Áno</li>
+<li>Žiadne problémy s interpreterom → Áno</li>
+<li>Spustenie → Prechod na <code>&lt;kernel&gt; /usr/bin/calc</code></li>
+</ol>
+</li>
+</ul>
+<h2 id="pripojenie-poznámok">Pripojenie poznámok<a hidden class="anchor" aria-hidden="true" href="#pripojenie-poznámok">#</a></h2>
+<ul>
+<li><strong>Kľúčové pojmy:</strong>
+<ul>
+<li><code>[candidate]</code>: Cesta k programu</li>
+<li><code>[destination]</code>: Nová doména</li>
+<li><code>[current_domain]</code>: doména (napr. <code>&lt;kernel&gt; /sbin/init</code>)</li>
+<li><code>[current_namespace]</code>: Koreň ako <code>&lt;kernel&gt;</code></li>
+</ul>
+</li>
+<li><strong>Priorita:</strong> Krok 3 &gt; Krok 4 (špecifické pravidlá prekonávajú predvolené)</li>
+<li><strong>Režim vynucovania:</strong> Striktné zakázanie pri zlyhaní</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/sk/">Samuel Sirota</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'kopírovať';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'skopírované!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'kopírovať';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -126,6 +126,18 @@
     <loc>http://localhost:1313/posts/math-typesetting/</loc>
     <lastmod>2019-03-08T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/posts/lsm/tomoyo-domain-transition/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sk"
+                href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/"
+                />
+  </url><url>
     <loc>http://localhost:1313/archives/</loc>
     <xhtml:link
                 rel="alternate"

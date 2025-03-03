@@ -99,6 +99,18 @@
                 href="http://localhost:1313/sk/tags/"
                 />
   </url><url>
+    <loc>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sk"
+                href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/"
+                />
+  </url><url>
     <loc>http://localhost:1313/sk/archives/</loc>
     <xhtml:link
                 rel="alternate"

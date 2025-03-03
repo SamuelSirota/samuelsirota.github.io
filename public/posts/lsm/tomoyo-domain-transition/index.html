@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>TOMOYO Domain transitions | Samuel Sirota</title>
+<meta name="keywords" content="">
+<meta name="description" content="How TOMOYO decides if a process can run a program (via execve()) and switch domains
+Example: Process in &lt;kernel&gt; /sbin/init wants to run /usr/bin/calc
+Step 1: Obtain program pathname
+
+
+Get the program’s full path [candidate]
+
+
+can be a symlink
+
+
+Example:
+/usr/bin/calc → [candidate] = &#34;/usr/bin/calc&#34;
+
+
+Step 2: Check for aggregator directive
+
+
+Check exception policy for aggregator [candidate] [pathname]
+
+
+If found, replace [candidate] with [pathname]
+
+
+Example:
+aggregator /usr/bin/calc /bin/calculator → [candidate] = &#34;/bin/calculator&#34;
+
+
+Aggregator groups similar programs; if none, keep original [candidate]">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.448b4c86e045664a722163802d0434f32bf5e7150f65a4dd5ed1dfe0cbbca35d.css" integrity="sha256-RItMhuBFZkpyIWOALQQ08yv15xUPZaTdXtHf4Mu8o10=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">
+<link rel="alternate" hreflang="sk" href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">
+  <meta property="og:site_name" content="Samuel Sirota">
+  <meta property="og:title" content="TOMOYO Domain transitions">
+  <meta property="og:description" content="How TOMOYO decides if a process can run a program (via execve()) and switch domains Example: Process in &lt;kernel&gt; /sbin/init wants to run /usr/bin/calc
+Step 1: Obtain program pathname Get the program’s full path [candidate]
+can be a symlink
+Example:
+/usr/bin/calc → [candidate] = &#34;/usr/bin/calc&#34; Step 2: Check for aggregator directive Check exception policy for aggregator [candidate] [pathname]
+If found, replace [candidate] with [pathname]
+Example:
+aggregator /usr/bin/calc /bin/calculator → [candidate] = &#34;/bin/calculator&#34; Aggregator groups similar programs; if none, keep original [candidate]">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-03-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-03-03T00:00:00+00:00">
+      <meta property="og:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+<meta name="twitter:title" content="TOMOYO Domain transitions">
+<meta name="twitter:description" content="How TOMOYO decides if a process can run a program (via execve()) and switch domains
+Example: Process in &lt;kernel&gt; /sbin/init wants to run /usr/bin/calc
+Step 1: Obtain program pathname
+
+
+Get the program’s full path [candidate]
+
+
+can be a symlink
+
+
+Example:
+/usr/bin/calc → [candidate] = &#34;/usr/bin/calc&#34;
+
+
+Step 2: Check for aggregator directive
+
+
+Check exception policy for aggregator [candidate] [pathname]
+
+
+If found, replace [candidate] with [pathname]
+
+
+Example:
+aggregator /usr/bin/calc /bin/calculator → [candidate] = &#34;/bin/calculator&#34;
+
+
+Aggregator groups similar programs; if none, keep original [candidate]">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "TOMOYO Domain transitions",
+      "item": "http://localhost:1313/posts/lsm/tomoyo-domain-transition/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "TOMOYO Domain transitions",
+  "name": "TOMOYO Domain transitions",
+  "description": "How TOMOYO decides if a process can run a program (via execve()) and switch domains Example: Process in \u0026lt;kernel\u0026gt; /sbin/init wants to run /usr/bin/calc\nStep 1: Obtain program pathname Get the program’s full path [candidate]\ncan be a symlink\nExample:\n/usr/bin/calc → [candidate] = \u0026#34;/usr/bin/calc\u0026#34; Step 2: Check for aggregator directive Check exception policy for aggregator [candidate] [pathname]\nIf found, replace [candidate] with [pathname]\nExample:\naggregator /usr/bin/calc /bin/calculator → [candidate] = \u0026#34;/bin/calculator\u0026#34; Aggregator groups similar programs; if none, keep original [candidate]\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "How TOMOYO decides if a process can run a program (via execve()) and switch domains Example: Process in /sbin/init wants to run /usr/bin/calc\nStep 1: Obtain program pathname Get the program’s full path [candidate]\ncan be a symlink\nExample:\n/usr/bin/calc → [candidate] = \"/usr/bin/calc\" Step 2: Check for aggregator directive Check exception policy for aggregator [candidate] [pathname]\nIf found, replace [candidate] with [pathname]\nExample:\naggregator /usr/bin/calc /bin/calculator → [candidate] = \"/bin/calculator\" Aggregator groups similar programs; if none, keep original [candidate]\nStep 3: Check for file execute directive Look in current domain’s policy (e.g., /sbin/init) for file execute [candidate] ...\nOptions (sets [destination], jumps to Step 5):\nfile execute [candidate] keep → Stay in /sbin/init\nfile execute [candidate] child → /sbin/init /usr/bin/calc\nfile execute [candidate] reset → /usr/bin/calc\nfile execute [candidate] initialize → /usr/bin/calc (namespace root)\nfile execute [candidate] parent → (parent domain)\nfile execute [candidate] [domainname] → Custom domain (e.g., /usr/bin/game)\nfile execute [candidate] [pathname] → /sbin/init /some/path\nfile execute [candidate] → No modifier, go to Step 4\nFail: No rule + enforcing mode → Deny\nExample:\nfile execute /usr/bin/calc reset → [destination] = \" /usr/bin/calc\" Step 4: Determine default domain transition If Step 3 didn’t set [destination], check exception policy in order: reset_domain [candidate] from [source] (or \"any\") + no no_reset_domain → /usr/bin/calc, jump to Step 5 initialize_domain [candidate] from [source] (or \"any\") + no no_initialize_domain → /usr/bin/calc, jump to Step 5 keep_domain [candidate] from [source] (or \"any\") + no no_keep_domain → /sbin/init, jump to Step 5 Default → /sbin/init /usr/bin/calc Example:\ninitialize_domain /usr/bin/calc → [destination] = \" /usr/bin/calc\" Fallback plan if Step 3 was vague\nStep 5: Create destination domain Set up [destination] from Step 3 or 4 Failures: Step 3 rule, cannot be created → Deny reset_domain → Deny Step 4 default + enforcing mode → Deny Step 4 default + other mode → execution is continued but stays in current domain, mark transition_failed directive Step 6: Check environment variables Verify env vars (e.g., PATH) in [destination]\nif \u003e1 env var is rejected + enforcing mode → Deny\nExample:\n\"LD_PRELOAD\" rejected in \" /usr/bin/calc\" → Deny if enforcing Step 7: Check interpreters If program needs an interpreter (e.g., /bin/bash for a script), check read permission in [destination]\nif read for interpreter denied + enforcing mode → Deny\nExample:\n\"/usr/bin/calc\" needs \"/bin/bash\", read in \"/bin/bash\" denied → Fail if enforcing Step 8: Execute the program Run the program, if successful, switch to [destination] Example: /usr/bin/calc runs → Process moves to /usr/bin/calc Success = transition complete Domain transition flowchart Start: \" /sbin/init\" 1. Get \"/usr/bin/calc\" 2. Aggregator? → No 3. file execute? - Yes → Set [destination] → Jump to 5 - No → 4. Defaults? - reset_domain → \" /usr/bin/calc\" - initialize_domain → \" /usr/bin/calc\" - keep_domain → \" /sbin/init\" - Default → \" /sbin/init /usr/bin/calc\" 5. Create [destination] - Yes → 6. Env vars okay? - Yes → 7. Interpreter okay? - Yes → 8. Run \u0026 transition SUCCESSFUL - No → DENY (enforcing) - No → DENY (enforcing) - No → DENY or stay in current domain Example scenario /sbin/init, wants to transition to /usr/bin/calc Policy: file execute /usr/bin/calc initialize, enforcing mode Steps: [candidate] = \"/usr/bin/calc\" No aggregator initialize → [destination] = \" /usr/bin/calc\", jump to 5 Create /usr/bin/calc Env vars okay → Yes No interpreter issues → Yes Run → Transition to /usr/bin/calc Attaching notes Key Terms: [candidate]: Program path [destination]: New domain [current_domain]: Starting domain (e.g., /sbin/init) [current_namespace]: Root like Priority: Step 3 \u003e Step 4 (specific rules beat defaults) Enforcing Mode: Strict—denies on failures ",
+  "wordCount" : "610",
+  "inLanguage": "en",
+  "image": "http://localhost:1313/images/sensei_penguin_cropped.png","datePublished": "2025-03-03T00:00:00Z",
+  "dateModified": "2025-03-03T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/lsm/tomoyo-domain-transition/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Samuel Sirota",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Samuel Sirota (Alt + H)">Samuel Sirota</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="http://localhost:1313/sk/" title="🇸🇰"
+                            aria-label="🇸🇰">🇸🇰</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about-me/" title="About me">
+                    <span>About me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      TOMOYO Domain transitions
+    </h1>
+    <div class="post-meta"><span title='2025-03-03 00:00:00 +0000 UTC'>March 3, 2025</span>&nbsp;·&nbsp;3 min&nbsp;|&nbsp;Translations:
+<ul class="i18n_list">
+    <li>
+        <a href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">🇸🇰</a>
+    </li>
+</ul>&nbsp;|&nbsp;<a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/posts/LSM/tomoyo-domain-transition.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#step-1-obtain-program-pathname" aria-label="Step 1: Obtain program pathname">Step 1: Obtain program pathname</a></li>
+                <li>
+                    <a href="#step-2-check-for-aggregator-directive" aria-label="Step 2: Check for aggregator directive">Step 2: Check for aggregator directive</a></li>
+                <li>
+                    <a href="#step-3-check-for-file-execute-directive" aria-label="Step 3: Check for file execute directive">Step 3: Check for file execute directive</a></li>
+                <li>
+                    <a href="#step-4-determine-default-domain-transition" aria-label="Step 4: Determine default domain transition">Step 4: Determine default domain transition</a></li>
+                <li>
+                    <a href="#step-5-create-destination-domain" aria-label="Step 5: Create destination domain">Step 5: Create destination domain</a></li>
+                <li>
+                    <a href="#step-6-check-environment-variables" aria-label="Step 6: Check environment variables">Step 6: Check environment variables</a></li>
+                <li>
+                    <a href="#step-7-check-interpreters" aria-label="Step 7: Check interpreters">Step 7: Check interpreters</a></li>
+                <li>
+                    <a href="#step-8-execute-the-program" aria-label="Step 8: Execute the program">Step 8: Execute the program</a></li>
+                <li>
+                    <a href="#domain-transition-flowchart" aria-label="Domain transition flowchart">Domain transition flowchart</a></li>
+                <li>
+                    <a href="#example-scenario" aria-label="Example scenario">Example scenario</a></li>
+                <li>
+                    <a href="#attaching-notes" aria-label="Attaching notes">Attaching notes</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>How TOMOYO decides if a process can run a program (via <code>execve()</code>) and switch domains
+<strong>Example:</strong> Process in <code>&lt;kernel&gt; /sbin/init</code> wants to run <code>/usr/bin/calc</code></p>
+<h2 id="step-1-obtain-program-pathname">Step 1: Obtain program pathname<a hidden class="anchor" aria-hidden="true" href="#step-1-obtain-program-pathname">#</a></h2>
+<ul>
+<li>
+<p>Get the program’s full path <code>[candidate]</code></p>
+</li>
+<li>
+<p>can be a symlink</p>
+</li>
+<li>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">/usr/bin/calc → [candidate] = &#34;/usr/bin/calc&#34;
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="step-2-check-for-aggregator-directive">Step 2: Check for aggregator directive<a hidden class="anchor" aria-hidden="true" href="#step-2-check-for-aggregator-directive">#</a></h2>
+<ul>
+<li>
+<p>Check exception policy for <code>aggregator [candidate] [pathname]</code></p>
+</li>
+<li>
+<p>If found, replace <code>[candidate]</code> with <code>[pathname]</code></p>
+</li>
+<li>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">aggregator /usr/bin/calc /bin/calculator → [candidate] = &#34;/bin/calculator&#34;
+</span></span></code></pre></div></li>
+<li>
+<p>Aggregator groups similar programs; if none, keep original <code>[candidate]</code></p>
+</li>
+</ul>
+<h2 id="step-3-check-for-file-execute-directive">Step 3: Check for <code>file execute</code> directive<a hidden class="anchor" aria-hidden="true" href="#step-3-check-for-file-execute-directive">#</a></h2>
+<ul>
+<li>
+<p>Look in current domain’s policy (e.g., <code>&lt;kernel&gt; /sbin/init</code>) for <code>file execute [candidate] ...</code></p>
+</li>
+<li>
+<p><strong>Options (sets <code>[destination]</code>, jumps to Step 5):</strong></p>
+</li>
+<li>
+<p><code>file execute [candidate] keep</code> → Stay in <code>&lt;kernel&gt; /sbin/init</code></p>
+</li>
+<li>
+<p><code>file execute [candidate] child</code> → <code>&lt;kernel&gt; /sbin/init /usr/bin/calc</code></p>
+</li>
+<li>
+<p><code>file execute [candidate] reset</code> → <code>&lt;kernel&gt; /usr/bin/calc</code></p>
+</li>
+<li>
+<p><code>file execute [candidate] initialize</code> → <code>&lt;kernel&gt; /usr/bin/calc</code> (namespace root)</p>
+</li>
+<li>
+<p><code>file execute [candidate] parent</code> → <code>&lt;kernel&gt;</code> (parent domain)</p>
+</li>
+<li>
+<p><code>file execute [candidate] [domainname]</code> → Custom domain (e.g., <code>&lt;kernel&gt; /usr/bin/game</code>)</p>
+</li>
+<li>
+<p><code>file execute [candidate] [pathname]</code> → <code>&lt;kernel&gt; /sbin/init /some/path</code></p>
+</li>
+<li>
+<p><code>file execute [candidate]</code> → No modifier, go to Step 4</p>
+</li>
+<li>
+<p><strong>Fail:</strong> No rule + enforcing mode → Deny</p>
+</li>
+<li>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">file execute /usr/bin/calc reset → [destination] = &#34;&lt;kernel&gt; /usr/bin/calc&#34;
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="step-4-determine-default-domain-transition">Step 4: Determine default domain transition<a hidden class="anchor" aria-hidden="true" href="#step-4-determine-default-domain-transition">#</a></h2>
+<ul>
+<li>If Step 3 didn’t set <code>[destination]</code>, check exception policy in order:</li>
+</ul>
+<ol>
+<li><code>reset_domain [candidate] from [source] (or &quot;any&quot;) + no no_reset_domain</code> → <code>&lt;kernel&gt; /usr/bin/calc</code>, jump to Step 5</li>
+<li><code>initialize_domain [candidate] from [source] (or &quot;any&quot;) + no no_initialize_domain</code> → <code>&lt;kernel&gt; /usr/bin/calc</code>, jump to Step 5</li>
+<li><code>keep_domain [candidate] from [source] (or &quot;any&quot;) + no no_keep_domain</code> → <code>&lt;kernel&gt; /sbin/init</code>, jump to Step 5</li>
+<li><strong>Default</strong> → <code>&lt;kernel&gt; /sbin/init /usr/bin/calc</code></li>
+</ol>
+<ul>
+<li>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">initialize_domain /usr/bin/calc → [destination] = &#34;&lt;kernel&gt; /usr/bin/calc&#34;
+</span></span></code></pre></div></li>
+<li>
+<p>Fallback plan if Step 3 was vague</p>
+</li>
+</ul>
+<h2 id="step-5-create-destination-domain">Step 5: Create destination domain<a hidden class="anchor" aria-hidden="true" href="#step-5-create-destination-domain">#</a></h2>
+<ul>
+<li>Set up <code>[destination]</code> from Step 3 or 4</li>
+<li><strong>Failures:</strong>
+<ul>
+<li>Step 3 rule, cannot be created → Deny</li>
+<li><code>reset_domain</code> → Deny</li>
+<li>Step 4 default + enforcing mode → Deny</li>
+</ul>
+</li>
+<li>Step 4 default + other mode → execution is continued but stays in current domain, mark <code>transition_failed</code> directive</li>
+</ul>
+<h2 id="step-6-check-environment-variables">Step 6: Check environment variables<a hidden class="anchor" aria-hidden="true" href="#step-6-check-environment-variables">#</a></h2>
+<ul>
+<li>
+<p>Verify env vars (e.g., <code>PATH</code>) in <code>[destination]</code></p>
+</li>
+<li>
+<p>if &gt;1 env var is rejected + enforcing mode  → Deny</p>
+</li>
+<li>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">&#34;LD_PRELOAD&#34; rejected in &#34;&lt;kernel&gt; /usr/bin/calc&#34; → Deny if enforcing
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="step-7-check-interpreters">Step 7: Check interpreters<a hidden class="anchor" aria-hidden="true" href="#step-7-check-interpreters">#</a></h2>
+<ul>
+<li>
+<p>If program needs an interpreter (e.g., <code>/bin/bash</code> for a script), check read permission in <code>[destination]</code></p>
+</li>
+<li>
+<p>if read for interpreter denied + enforcing mode → Deny</p>
+</li>
+<li>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">&#34;/usr/bin/calc&#34; needs &#34;/bin/bash&#34;, read in &#34;/bin/bash&#34; denied → Fail if enforcing
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="step-8-execute-the-program">Step 8: Execute the program<a hidden class="anchor" aria-hidden="true" href="#step-8-execute-the-program">#</a></h2>
+<ul>
+<li>Run the program, if successful, switch to <code>[destination]</code></li>
+<li><strong>Example:</strong> <code>/usr/bin/calc</code> runs → Process moves to <code>&lt;kernel&gt; /usr/bin/calc</code></li>
+<li>Success = transition complete</li>
+</ul>
+<h2 id="domain-transition-flowchart">Domain transition flowchart<a hidden class="anchor" aria-hidden="true" href="#domain-transition-flowchart">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Start: &#34;&lt;kernel&gt; /sbin/init&#34;
+</span></span><span class="line"><span class="cl">1. Get &#34;/usr/bin/calc&#34;
+</span></span><span class="line"><span class="cl">2. Aggregator? → No
+</span></span><span class="line"><span class="cl">3. file execute?
+</span></span><span class="line"><span class="cl">    - Yes → Set [destination] → Jump to 5
+</span></span><span class="line"><span class="cl">    - No → 4. Defaults?
+</span></span><span class="line"><span class="cl">        - reset_domain → &#34;&lt;kernel&gt; /usr/bin/calc&#34;
+</span></span><span class="line"><span class="cl">        - initialize_domain → &#34;&lt;kernel&gt; /usr/bin/calc&#34;
+</span></span><span class="line"><span class="cl">        - keep_domain → &#34;&lt;kernel&gt; /sbin/init&#34;
+</span></span><span class="line"><span class="cl">        - Default → &#34;&lt;kernel&gt; /sbin/init /usr/bin/calc&#34;
+</span></span><span class="line"><span class="cl">5. Create [destination]
+</span></span><span class="line"><span class="cl">    - Yes → 6. Env vars okay?
+</span></span><span class="line"><span class="cl">        - Yes → 7. Interpreter okay?
+</span></span><span class="line"><span class="cl">            - Yes → 8. Run &amp; transition SUCCESSFUL
+</span></span><span class="line"><span class="cl">            - No → DENY (enforcing)
+</span></span><span class="line"><span class="cl">        - No → DENY (enforcing)
+</span></span><span class="line"><span class="cl">    - No → DENY or stay in current domain
+</span></span></code></pre></div><h2 id="example-scenario">Example scenario<a hidden class="anchor" aria-hidden="true" href="#example-scenario">#</a></h2>
+<ul>
+<li><code>&lt;kernel&gt; /sbin/init</code>, wants to transition to <code>/usr/bin/calc</code></li>
+<li>Policy: <code>file execute /usr/bin/calc initialize</code>, enforcing mode</li>
+<li><strong>Steps:</strong>
+<ol>
+<li><code>[candidate] = &quot;/usr/bin/calc&quot;</code></li>
+<li>No aggregator</li>
+<li><code>initialize</code> → <code>[destination] = &quot;&lt;kernel&gt; /usr/bin/calc&quot;</code>, jump to 5</li>
+<li>Create <code>&lt;kernel&gt; /usr/bin/calc</code></li>
+<li>Env vars okay → Yes</li>
+<li>No interpreter issues → Yes</li>
+<li>Run → Transition to <code>&lt;kernel&gt; /usr/bin/calc</code></li>
+</ol>
+</li>
+</ul>
+<h2 id="attaching-notes">Attaching notes<a hidden class="anchor" aria-hidden="true" href="#attaching-notes">#</a></h2>
+<ul>
+<li><strong>Key Terms:</strong>
+<ul>
+<li><code>[candidate]</code>: Program path</li>
+<li><code>[destination]</code>: New domain</li>
+<li><code>[current_domain]</code>: Starting domain (e.g., <code>&lt;kernel&gt; /sbin/init</code>)</li>
+<li><code>[current_namespace]</code>: Root like <code>&lt;kernel&gt;</code></li>
+</ul>
+</li>
+<li><strong>Priority:</strong> Step 3 &gt; Step 4 (specific rules beat defaults)</li>
+<li><strong>Enforcing Mode:</strong> Strict—denies on failures</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">Samuel Sirota</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

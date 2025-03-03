@@ -177,6 +177,26 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">TOMOYO Domain transitions
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>How TOMOYO decides if a process can run a program (via execve()) and switch domains Example: Process in &lt;kernel&gt; /sbin/init wants to run /usr/bin/calc
+Step 1: Obtain program pathname Get the program’s full path [candidate]
+can be a symlink
+Example:
+/usr/bin/calc → [candidate] = &#34;/usr/bin/calc&#34; Step 2: Check for aggregator directive Check exception policy for aggregator [candidate] [pathname]
+If found, replace [candidate] with [pathname]
+Example:
+aggregator /usr/bin/calc /bin/calculator → [candidate] = &#34;/bin/calculator&#34; Aggregator groups similar programs; if none, keep original [candidate]
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-03-03 00:00:00 +0000 UTC'>March 3, 2025</span>&nbsp;·&nbsp;3 min</footer>
+  <a class="entry-link" aria-label="post link to TOMOYO Domain transitions" href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Tomoyo LSM installation
     </h2>
   </header>
