@@ -44,11 +44,11 @@ languages:
       profileMode:
         enabled: true
         title: Samuel Sirota
-        imageUrl: "images/sensei_penguin_cropped.png"
+        imageUrl: "images/profile_picture.jpg"
         imageTitle: image
         # imageWidth: 120
         # imageHeight: 120
-        subtitle: "☄️ Fast | ☁️ Fluent | 🌙 Smooth | 📱 Responsive"
+        subtitle: "Cybersecurity enthusiast"
         buttons:
           - name: Blog
             url: posts/
@@ -85,11 +85,11 @@ languages:
       profileMode:
         enabled: true
         title: Samuel Sirota
-        imageUrl: "images/sensei_penguin_cropped.png"
+        imageUrl: "images/profile_picture.jpg"
         imageTitle: obrazok
         # imageWidth: 120
         # imageHeight: 120
-        subtitle: "☄️ Rychly | ☁️ Plynuly | 🌙 Hladky | 📱 Responzivny"
+        subtitle: "Nadšenec kybernetickej bezpečnosti"
         buttons:
           - name: Blog
             url: posts/
@@ -104,7 +104,7 @@ outputs:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  description: "Samuel Sirota personal website"
+  description: "Samuel Sirota's personal website"
   #author: Samuel Sirota
   # author: ["Me", "You"] # multiple authors
 
@@ -122,7 +122,7 @@ params:
   ShowPageNums: true
   ShowToc: true
   # comments: false
-  images: ["images/sensei_penguin_cropped.png"]
+  images: ["images/profile_picture.jpg"]
 
   profileMode:
     enabled: false
@@ -137,22 +137,9 @@ params:
       - name: Tags
         url: tags
 
-  homeInfoParams:
-    Title: "PaperMod's Demo"
-    Content: >
-      👋 Welcome to demo page of Hugo's theme PaperMod!
-
-      - **PaperMod**  is designed to be clean and simple but fast and responsive theme with useful feature-set that enhances UX.
-
-      - Feel free to show your support by giving us a star 🌟 on GitHub and sharing with your friends and social media .
-
-      - PaperMod is based on theme [Paper](https://github.com/nanxiaobei/hugo-paper/tree/4330c8b12aa48bfdecbcad6ad66145f679a430b3).
-
   socialIcons:
     - name: github
       url: "https://github.com/SamuelSirota"
-    - name: X
-      url: "https://x.com/SamkoPengu"
     - name: linkedin
       url: "https://www.linkedin.com/in/samuelsirota/"
 

@@ -22,4 +22,4 @@ Som všestranný odborník v oblasti informatiky s pevnými základmi v programo
 
 Prostredníctvom viacerých tímových projektov a bakalárskej práce som si rozvinul silné schopnosti spolupráce a výskumu, pričom som aplikoval teoretické vedomosti v praxi.
 
-<a href="/pdfs/CV_eng_Sirota.pdf" target="_blank" download>Stiahni si môj životopis</a>
+<a href="/pdfs/CV_sirota.pdf" target="_blank" download>Stiahni si môj životopis</a>

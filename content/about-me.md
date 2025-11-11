@@ -23,4 +23,4 @@ I am a versatile computer science professional with a strong foundation in progr
 
 Through multiple team projects and a bachelor thesis, I have developed strong collaboration and research skills, applying theoretical knowledge to practical scenarios.
 
-<a href="/pdfs/CV_eng_Sirota.pdf" target="_blank" download>Download my CV</a>
+<a href="/pdfs/CV_sirota_en.pdf" target="_blank" download>Download my CV</a>
