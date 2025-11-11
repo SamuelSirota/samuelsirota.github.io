@@ -17,6 +17,13 @@ iframe {
 }
 
 :root {
+    --gap: 24px;
+    --content-gap: 20px;
+    --nav-width: 1024px;
+    --main-width: 720px;
+    --header-height: 60px;
+    --footer-height: 60px;
+    --radius: 8px;
     --theme: rgb(235, 230, 190);    /* Unchanged: muted warm yellow */
     --entry: rgb(248, 242, 215);    /* Brighter, warmer off-white to match vibrancy */
     --primary: rgb(40, 25, 10);     /* Deeper, richer brown for stronger contrast */
