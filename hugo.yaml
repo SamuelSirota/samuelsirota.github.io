@@ -213,5 +213,7 @@ markup:
 services:
   instagram:
     disableInlineCSS: true
-  twitter:
+  x:
     disableInlineCSS: true
+
+ignoreLogs: ['warning-partial-superfluous-prefix']
