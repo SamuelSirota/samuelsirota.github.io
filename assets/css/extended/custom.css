@@ -25,10 +25,11 @@ iframe {
     --content: rgb(50, 35, 20);     /* Darker, warmer brown for readability */
     --code-block-bg: rgb(75, 50, 35); /* Richer warm gray-brown for depth */
     --code-bg: rgb(240, 215, 185);  /* Vibrant warm off-white, ties to secondary */
-    --border: rgb(215, 180, 135);   /* Brighter beige, aligns with the punchy secondary */
+    --border: rgb(215, 180, 135);  /* Brighter beige, aligns with the punchy secondary */
+    color-scheme: light
 }
 
-.dark {
+:root[data-theme=dark] {
     --theme: rgb(4, 9, 21);        /* Deep dark blue as the base - unchanged */
     --entry: rgb(25, 20, 40);      /* Adjusted to a darker, slightly purplish-gray */
     --primary: rgb(210, 200, 230); /* Lightened with a subtle purple tint */
@@ -38,12 +39,13 @@ iframe {
     --code-block-bg: rgb(25, 20, 40); /* Matching the new entry tone */
     --code-bg: rgb(35, 30, 60);    /* Darker with a subtle purple shift */
     --border: rgb(30, 25, 50);     /* Darker border with a faint purple undertone */
+    color-scheme: dark
 }
 
 .list {
     background: var(--theme);
 }
 
-.dark.list {
+[data-theme=dark] .list {
     background: var(--theme);
 }
