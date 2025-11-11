@@ -108,7 +108,7 @@ params:
   #author: Samuel Sirota
   # author: ["Me", "You"] # multiple authors
 
-  defaultTheme: auto
+  defaultTheme: dark
   # disableThemeToggle: true
   ShowShareButtons: false
   ShowReadingTime: true
