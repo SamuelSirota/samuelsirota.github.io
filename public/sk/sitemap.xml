@@ -2,21 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/sk/about-me/</loc>
-    <lastmod>2025-02-25T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/about-me/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sk"
-                href="http://localhost:1313/sk/about-me/"
-                />
-  </url><url>
     <loc>http://localhost:1313/sk/posts/</loc>
-    <lastmod>2025-02-25T00:00:00+00:00</lastmod>
+    <lastmod>2025-03-03T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -29,7 +16,7 @@
                 />
   </url><url>
     <loc>http://localhost:1313/sk/</loc>
-    <lastmod>2025-02-25T00:00:00+00:00</lastmod>
+    <lastmod>2025-03-03T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -39,6 +26,32 @@
                 rel="alternate"
                 hreflang="sk"
                 href="http://localhost:1313/sk/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</loc>
+    <lastmod>2025-03-03T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sk"
+                href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/sk/about-me/</loc>
+    <lastmod>2025-02-25T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/about-me/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sk"
+                href="http://localhost:1313/sk/about-me/"
                 />
   </url><url>
     <loc>http://localhost:1313/sk/posts/lsm/tomoyo-installation/</loc>
@@ -97,18 +110,6 @@
                 rel="alternate"
                 hreflang="sk"
                 href="http://localhost:1313/sk/tags/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sk"
-                href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/"
                 />
   </url><url>
     <loc>http://localhost:1313/sk/archives/</loc>

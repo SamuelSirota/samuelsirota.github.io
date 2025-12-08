@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" dir="auto">
+<html lang="en" dir="auto" data-theme="dark">
 
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
 <title>TOMOYO Domain transitions | Samuel Sirota</title>
-<meta name="keywords" content="">
+<meta name="keywords" content="linux">
 <meta name="description" content="How TOMOYO decides if a process can run a program (via execve()) and switch domains
 Example: Process in &lt;kernel&gt; /sbin/init wants to run /usr/bin/calc
 Step 1: Obtain program pathname
@@ -38,7 +38,7 @@ aggregator /usr/bin/calc /bin/calculator → [candidate] = &#34;/bin/calculator&
 Aggregator groups similar programs; if none, keep original [candidate]">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.448b4c86e045664a722163802d0434f32bf5e7150f65a4dd5ed1dfe0cbbca35d.css" integrity="sha256-RItMhuBFZkpyIWOALQQ08yv15xUPZaTdXtHf4Mu8o10=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5156ae74ac8eed68099581cebcfba9e69b11a615c2bc8c04a5b5617a3eae1313.css" integrity="sha256-UVaudKyO7WgJlYHOvPup5psRphXCvIwEpbVhej6uExM=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -56,35 +56,13 @@ Aggregator groups similar programs; if none, keep original [candidate]">
         }
 
     </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --code-block-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
 
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-
-    </style>
-</noscript><meta property="og:url" content="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">
+</script><meta property="og:url" content="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">
   <meta property="og:site_name" content="Samuel Sirota">
   <meta property="og:title" content="TOMOYO Domain transitions">
   <meta property="og:description" content="How TOMOYO decides if a process can run a program (via execve()) and switch domains Example: Process in &lt;kernel&gt; /sbin/init wants to run /usr/bin/calc
@@ -100,9 +78,10 @@ aggregator /usr/bin/calc /bin/calculator → [candidate] = &#34;/bin/calculator&
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-03-03T00:00:00+00:00">
     <meta property="article:modified_time" content="2025-03-03T00:00:00+00:00">
-      <meta property="og:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+    <meta property="article:tag" content="Linux">
+      <meta property="og:image" content="http://localhost:1313/images/profile_picture.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+<meta name="twitter:image" content="http://localhost:1313/images/profile_picture.jpg">
 <meta name="twitter:title" content="TOMOYO Domain transitions">
 <meta name="twitter:description" content="How TOMOYO decides if a process can run a program (via execve()) and switch domains
 Example: Process in &lt;kernel&gt; /sbin/init wants to run /usr/bin/calc
@@ -163,12 +142,12 @@ Aggregator groups similar programs; if none, keep original [candidate]">
   "name": "TOMOYO Domain transitions",
   "description": "How TOMOYO decides if a process can run a program (via execve()) and switch domains Example: Process in \u0026lt;kernel\u0026gt; /sbin/init wants to run /usr/bin/calc\nStep 1: Obtain program pathname Get the program’s full path [candidate]\ncan be a symlink\nExample:\n/usr/bin/calc → [candidate] = \u0026#34;/usr/bin/calc\u0026#34; Step 2: Check for aggregator directive Check exception policy for aggregator [candidate] [pathname]\nIf found, replace [candidate] with [pathname]\nExample:\naggregator /usr/bin/calc /bin/calculator → [candidate] = \u0026#34;/bin/calculator\u0026#34; Aggregator groups similar programs; if none, keep original [candidate]\n",
   "keywords": [
-    
+    "linux"
   ],
   "articleBody": "How TOMOYO decides if a process can run a program (via execve()) and switch domains Example: Process in /sbin/init wants to run /usr/bin/calc\nStep 1: Obtain program pathname Get the program’s full path [candidate]\ncan be a symlink\nExample:\n/usr/bin/calc → [candidate] = \"/usr/bin/calc\" Step 2: Check for aggregator directive Check exception policy for aggregator [candidate] [pathname]\nIf found, replace [candidate] with [pathname]\nExample:\naggregator /usr/bin/calc /bin/calculator → [candidate] = \"/bin/calculator\" Aggregator groups similar programs; if none, keep original [candidate]\nStep 3: Check for file execute directive Look in current domain’s policy (e.g., /sbin/init) for file execute [candidate] ...\nOptions (sets [destination], jumps to Step 5):\nfile execute [candidate] keep → Stay in /sbin/init\nfile execute [candidate] child → /sbin/init /usr/bin/calc\nfile execute [candidate] reset → /usr/bin/calc\nfile execute [candidate] initialize → /usr/bin/calc (namespace root)\nfile execute [candidate] parent → (parent domain)\nfile execute [candidate] [domainname] → Custom domain (e.g., /usr/bin/game)\nfile execute [candidate] [pathname] → /sbin/init /some/path\nfile execute [candidate] → No modifier, go to Step 4\nFail: No rule + enforcing mode → Deny\nExample:\nfile execute /usr/bin/calc reset → [destination] = \" /usr/bin/calc\" Step 4: Determine default domain transition If Step 3 didn’t set [destination], check exception policy in order: reset_domain [candidate] from [source] (or \"any\") + no no_reset_domain → /usr/bin/calc, jump to Step 5 initialize_domain [candidate] from [source] (or \"any\") + no no_initialize_domain → /usr/bin/calc, jump to Step 5 keep_domain [candidate] from [source] (or \"any\") + no no_keep_domain → /sbin/init, jump to Step 5 Default → /sbin/init /usr/bin/calc Example:\ninitialize_domain /usr/bin/calc → [destination] = \" /usr/bin/calc\" Fallback plan if Step 3 was vague\nStep 5: Create destination domain Set up [destination] from Step 3 or 4 Failures: Step 3 rule, cannot be created → Deny reset_domain → Deny Step 4 default + enforcing mode → Deny Step 4 default + other mode → execution is continued but stays in current domain, mark transition_failed directive Step 6: Check environment variables Verify env vars (e.g., PATH) in [destination]\nif \u003e1 env var is rejected + enforcing mode → Deny\nExample:\n\"LD_PRELOAD\" rejected in \" /usr/bin/calc\" → Deny if enforcing Step 7: Check interpreters If program needs an interpreter (e.g., /bin/bash for a script), check read permission in [destination]\nif read for interpreter denied + enforcing mode → Deny\nExample:\n\"/usr/bin/calc\" needs \"/bin/bash\", read in \"/bin/bash\" denied → Fail if enforcing Step 8: Execute the program Run the program, if successful, switch to [destination] Example: /usr/bin/calc runs → Process moves to /usr/bin/calc Success = transition complete Domain transition flowchart Start: \" /sbin/init\" 1. Get \"/usr/bin/calc\" 2. Aggregator? → No 3. file execute? - Yes → Set [destination] → Jump to 5 - No → 4. Defaults? - reset_domain → \" /usr/bin/calc\" - initialize_domain → \" /usr/bin/calc\" - keep_domain → \" /sbin/init\" - Default → \" /sbin/init /usr/bin/calc\" 5. Create [destination] - Yes → 6. Env vars okay? - Yes → 7. Interpreter okay? - Yes → 8. Run \u0026 transition SUCCESSFUL - No → DENY (enforcing) - No → DENY (enforcing) - No → DENY or stay in current domain Example scenario /sbin/init, wants to transition to /usr/bin/calc Policy: file execute /usr/bin/calc initialize, enforcing mode Steps: [candidate] = \"/usr/bin/calc\" No aggregator initialize → [destination] = \" /usr/bin/calc\", jump to 5 Create /usr/bin/calc Env vars okay → Yes No interpreter issues → Yes Run → Transition to /usr/bin/calc Attaching notes Key Terms: [candidate]: Program path [destination]: New domain [current_domain]: Starting domain (e.g., /sbin/init) [current_namespace]: Root like Priority: Step 3 \u003e Step 4 (specific rules beat defaults) Enforcing Mode: Strict—denies on failures ",
   "wordCount" : "610",
   "inLanguage": "en",
-  "image": "http://localhost:1313/images/sensei_penguin_cropped.png","datePublished": "2025-03-03T00:00:00Z",
+  "image": "http://localhost:1313/images/profile_picture.jpg","datePublished": "2025-03-03T00:00:00Z",
   "dateModified": "2025-03-03T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -185,25 +164,13 @@ Aggregator groups similar programs; if none, keep original [candidate]">
 }
 </script>
 </head>
-
-<body class="" id="top">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-
-</script>
-
-<header class="header">
+<body id="top">
+    <header class="header">
     <nav class="nav">
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Samuel Sirota (Alt + H)">Samuel Sirota</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -223,12 +190,12 @@ Aggregator groups similar programs; if none, keep original [candidate]">
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
                 </button>
-                <ul class="lang-switch"><li>|</li>
-                    <li>
-                        <a href="http://localhost:1313/sk/" title="🇸🇰"
-                            aria-label="🇸🇰">🇸🇰</a>
-                    </li>
-                </ul>
+                    <ul class="lang-switch"><li>|</li>
+                        <li>
+                            <a href="http://localhost:1313/sk/" title="🇸🇰"
+                                aria-label="🇸🇰">🇸🇰</a>
+                        </li>
+                    </ul>
             </div>
         </div>
         <ul id="menu">
@@ -268,12 +235,14 @@ Aggregator groups similar programs; if none, keep original [candidate]">
     <h1 class="post-title entry-hint-parent">
       TOMOYO Domain transitions
     </h1>
-    <div class="post-meta"><span title='2025-03-03 00:00:00 +0000 UTC'>March 3, 2025</span>&nbsp;·&nbsp;3 min&nbsp;|&nbsp;Translations:
+    <div class="post-meta"><span title='2025-03-03 00:00:00 +0000 UTC'>March 3, 2025</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;|&nbsp;<span>Translations:</span>
 <ul class="i18n_list">
     <li>
         <a href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">🇸🇰</a>
     </li>
-</ul>&nbsp;|&nbsp;<a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/posts/LSM/tomoyo-domain-transition.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
+</ul>&nbsp;|&nbsp;<span>
+    <a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/posts/LSM/tomoyo-domain-transition.md" rel="noopener noreferrer edit" target="_blank">Suggest Changes</a>
+</span>
 
 </div>
   </header> <div class="toc">
@@ -498,6 +467,7 @@ Aggregator groups similar programs; if none, keep original [candidate]">
 
   <footer class="post-footer">
     <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/linux/">Linux</a></li>
     </ul>
   </footer>
 </article>
@@ -519,9 +489,14 @@ Aggregator groups similar programs; if none, keep original [candidate]">
 </a>
 
 <script>
-    let menu = document.getElementById('menu')
+    let menu = document.getElementById('menu');
     if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
         menu.onscroll = function () {
             localStorage.setItem("menu-scroll-position", menu.scrollLeft);
         }
@@ -562,11 +537,12 @@ Aggregator groups similar programs; if none, keep original [candidate]">
 </script>
 <script>
     document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
             localStorage.setItem("pref-theme", 'light');
         } else {
-            document.body.classList.add('dark');
+            html.dataset.theme = 'dark';
             localStorage.setItem("pref-theme", 'dark');
         }
     })

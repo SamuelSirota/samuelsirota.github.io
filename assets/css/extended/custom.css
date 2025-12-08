@@ -56,3 +56,14 @@ iframe {
 [data-theme=dark] .list {
     background: var(--theme);
 }
+
+/*
+
+.nav a:hover {
+    background-color: var(--primary);
+    color: var(--theme);
+    font-weight: 900;
+    border-radius: 10%;
+}
+
+*/

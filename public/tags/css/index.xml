@@ -6,10 +6,10 @@
     <description>Recent content in Css on Samuel Sirota</description>
     <image>
       <title>Samuel Sirota</title>
-      <url>http://localhost:1313/images/sensei_penguin_cropped.png</url>
-      <link>http://localhost:1313/images/sensei_penguin_cropped.png</link>
+      <url>http://localhost:1313/images/profile_picture.jpg</url>
+      <link>http://localhost:1313/images/profile_picture.jpg</link>
     </image>
-    <generator>Hugo -- 0.144.2</generator>
+    <generator>Hugo -- 0.152.2</generator>
     <language>en</language>
     <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/css/index.xml" rel="self" type="application/rss+xml" />

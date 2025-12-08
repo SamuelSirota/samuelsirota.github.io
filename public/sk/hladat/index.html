@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sk" dir="auto">
+<html lang="sk" dir="auto" data-theme="dark">
 
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,7 +10,7 @@
 <meta name="description" content="Hladat - Samuel Sirota">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/sk/hladat/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.448b4c86e045664a722163802d0434f32bf5e7150f65a4dd5ed1dfe0cbbca35d.css" integrity="sha256-RItMhuBFZkpyIWOALQQ08yv15xUPZaTdXtHf4Mu8o10=" rel="preload stylesheet" as="style"><link crossorigin="anonymous" rel="preload" as="fetch" href="../index.json">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5156ae74ac8eed68099581cebcfba9e69b11a615c2bc8c04a5b5617a3eae1313.css" integrity="sha256-UVaudKyO7WgJlYHOvPup5psRphXCvIwEpbVhej6uExM=" rel="preload stylesheet" as="style"><link crossorigin="anonymous" rel="preload" as="fetch" href="../index.json">
 <script defer crossorigin="anonymous" src="/assets/js/search.2826037ddab446009aa4dc907d6f13e5fe42eaff23f43abcba31285b991e9c6d.js" integrity="sha256-KCYDfdq0RgCapNyQfW8T5f5C6v8j9Dq8ujEoW5kenG0="></script>
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -29,43 +29,21 @@
         }
 
     </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --code-block-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
 
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-
-    </style>
-</noscript><meta property="og:url" content="http://localhost:1313/sk/hladat/">
+</script><meta property="og:url" content="http://localhost:1313/sk/hladat/">
   <meta property="og:site_name" content="Samuel Sirota">
   <meta property="og:title" content="Hladat">
-  <meta property="og:description" content="Samuel Sirota personal website">
+  <meta property="og:description" content="Samuel Sirota&#39;s personal website">
   <meta property="og:locale" content="sk">
   <meta property="og:type" content="article">
-      <meta property="og:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+      <meta property="og:image" content="http://localhost:1313/images/profile_picture.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+<meta name="twitter:image" content="http://localhost:1313/images/profile_picture.jpg">
 <meta name="twitter:title" content="Hladat">
 <meta name="twitter:description" content="">
 
@@ -97,7 +75,7 @@
   "articleBody": "",
   "wordCount" : "0",
   "inLanguage": "sk",
-  "image": "http://localhost:1313/images/sensei_penguin_cropped.png","datePublished": "0001-01-01T00:00:00Z",
+  "image": "http://localhost:1313/images/profile_picture.jpg","datePublished": "0001-01-01T00:00:00Z",
   "dateModified": "0001-01-01T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -114,25 +92,13 @@
 }
 </script>
 </head>
-
 <body class="list" id="top">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-
-</script>
-
-<header class="header">
+    <header class="header">
     <nav class="nav">
         <div class="logo">
             <a href="http://localhost:1313/sk/" accesskey="h" title="Samuel Sirota (Alt + H)">Samuel Sirota</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -152,12 +118,12 @@
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
                 </button>
-                <ul class="lang-switch"><li>|</li>
-                    <li>
-                        <a href="http://localhost:1313/" title="🇬🇧"
-                            aria-label="🇬🇧">🇬🇧</a>
-                    </li>
-                </ul>
+                    <ul class="lang-switch"><li>|</li>
+                        <li>
+                            <a href="http://localhost:1313/" title="🇬🇧"
+                                aria-label="🇬🇧">🇬🇧</a>
+                        </li>
+                    </ul>
             </div>
         </div>
         <ul id="menu">
@@ -198,7 +164,7 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
     </h1>
-    <div class="post-meta">Preklady:
+    <div class="post-meta"><span>Preklady:</span>
 <ul class="i18n_list">
     <li>
         <a href="http://localhost:1313/search/">🇬🇧</a>
@@ -229,9 +195,14 @@
 </a>
 
 <script>
-    let menu = document.getElementById('menu')
+    let menu = document.getElementById('menu');
     if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
         menu.onscroll = function () {
             localStorage.setItem("menu-scroll-position", menu.scrollLeft);
         }
@@ -272,11 +243,12 @@
 </script>
 <script>
     document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
             localStorage.setItem("pref-theme", 'light');
         } else {
-            document.body.classList.add('dark');
+            html.dataset.theme = 'dark';
             localStorage.setItem("pref-theme", 'dark');
         }
     })

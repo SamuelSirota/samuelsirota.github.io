@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sk" dir="auto">
+<html lang="sk" dir="auto" data-theme="dark">
 
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,7 +38,7 @@ aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“
 Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [candidate]">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.448b4c86e045664a722163802d0434f32bf5e7150f65a4dd5ed1dfe0cbbca35d.css" integrity="sha256-RItMhuBFZkpyIWOALQQ08yv15xUPZaTdXtHf4Mu8o10=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5156ae74ac8eed68099581cebcfba9e69b11a615c2bc8c04a5b5617a3eae1313.css" integrity="sha256-UVaudKyO7WgJlYHOvPup5psRphXCvIwEpbVhej6uExM=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -56,35 +56,13 @@ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [c
         }
 
     </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --code-block-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
 
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-
-    </style>
-</noscript><meta property="og:url" content="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">
+</script><meta property="og:url" content="http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/">
   <meta property="og:site_name" content="Samuel Sirota">
   <meta property="og:title" content="Tomoyo LSM prechody domén">
   <meta property="og:description" content="Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény
@@ -101,9 +79,9 @@ aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-03-03T00:00:00+00:00">
     <meta property="article:modified_time" content="2025-03-03T00:00:00+00:00">
-      <meta property="og:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+      <meta property="og:image" content="http://localhost:1313/images/profile_picture.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+<meta name="twitter:image" content="http://localhost:1313/images/profile_picture.jpg">
 <meta name="twitter:title" content="Tomoyo LSM prechody domén">
 <meta name="twitter:description" content="Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény
 Príklad: Proces v &lt;kernel&gt; /sbin/init chce spustiť /usr/bin/calc
@@ -169,7 +147,7 @@ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [c
   "articleBody": "Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom execve()) a prepínať domény\nPríklad: Proces v /sbin/init chce spustiť /usr/bin/calc\nKrok 1: Získanie názvu cesty programu Získajte úplnú cestu programu [candidate]\nmôže byť symlink\nPríklad:\n/usr/bin/calc → [candidate] = „/usr/bin/calc“ Krok 2: Kontrola smernice agregátora Skontrolujte politiku výnimiek pre agregator [candidate] [pathname]\nAk sa nájde, nahraďte [candidate] za [pathname]\nPríklad:\naggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [candidate]\nKrok 3: Kontrola smernice file execute Vyhľadajte v politike aktuálnej domény (napr. /sbin/init) príkaz file execute [candidate] ...\nMožnosti (nastaví [destination], prejde na krok 5):\nfile execute [candidate] keep → zostať v /sbin/init\nfile execute [candidate] child → /sbin/init /usr/bin/calc\nfile execute [candidate] reset → /usr/bin/calc\nfile execute [candidate] initialize → /usr/bin/calc (menný priestor root)\nfile execute [candidate] parent → (nadradená doména)\nfile execute [candidate] [názov domény] → vlastná doména (napr. /usr/bin/game)\nfile execute [candidate] [pathname] → /sbin/init /some/path\nfile execute [candidate] → bez modifikátora, prejdite na krok 4\nFail: Žiadne pravidlo + vynucovací mód → Deny\nPríklad:\nfile execute /usr/bin/calc reset → [destination] = /usr/bin/calc Krok 4: Určenie predvoleného prechodu domény Ak sa v kroku 3 nenastavil [destination], skontrolujte politiku výnimiek v poradí: reset_domain [candidate] z [source] (alebo „any“) + no_reset_domain → /usr/bin/calc, skok na Krok 5 initialize_domain [candidate] z [source] (alebo „any“) + no no_initialize_domain → /usr/bin/calc, skok na krok 5 keep_domain [candidate] z [source] (alebo „any“) + no no_keep_domain → /sbin/init, skok na krok 5 Default → /sbin/init /usr/bin/calc Príklad:\ninitialize_domain /usr/bin/calc → [destination] = /usr/bin/calc Náhradný plán, ak bol krok 3 nejasný\nKrok 5: Vytvorenie cieľovej domény Nastavte [destination] z kroku 3 alebo 4 Prípady zlyhania: Pravidlo kroku 3, nemožno vytvoriť → Odmietnuť reset_domain → Deny Krok 4 predvolený + vynucovací režim → Deny Krok 4 predvolený + iný režim → vykonávanie pokračuje, ale zostáva v aktuálnej doméne, označte smernicu transition_failed Krok 6: Kontrola premenných prostredia Overte premenné prostredia (napr. PATH) v [destination]\nak je \u003e1 env var zamietnutá + vynucovací režim → Deny\nPríklad:\nLD_PRELOAD“ zamietnutý v ‚ /usr/bin/calc‘ → Deny ak vynucovanie Krok 7: Kontrola interpretov Ak program potrebuje interpreter (napr. /bin/bash pre skript), skontrolujte oprávnenie na čítanie v [destination]\nak je čítanie pre interpret zamietnuté + vynucovanie režimu → Deny\nPríklad:\n/usr/bin/calc potrebuje /bin/bash, čítanie v /bin/bash zamietnuté → zlyhanie, ak vynucovanie Krok 8: Spustenie programu Spustite program, ak je úspešný, prepnite na [destination] Príklad: /usr/bin/calc spustí sa → proces sa presunie do /usr/bin/calc Úspech = prechod dokončený Diagram prechodov domény Začiatok: /sbin/init 1. Získajte /usr/bin/calc 2. Agregátor? → Nie 3. Spustenie súboru? - Áno → Nastaviť [destination] → Prejsť na 5 - Nie → 4. Predvolené nastavenia? - reset_domain → /usr/bin/calc - initialize_domain → /usr/bin/calc - keep_domain → /sbin/init - Predvolené nastavenie → /sbin/init /usr/bin/calc 5. Vytvoriť [destination] - Áno → 6. Env vars v poriadku? - Áno → 7. Interpreter v poriadku? - Áno → 8. Spustenie a prechod ÚSPECH - Nie → DENY (enforcing mode) - Nie → ODMIETNÚŤ (enforcing mode) - Nie → ODMIETNÚŤ alebo zostať v aktuálnej doméne Príklad scenára /sbin/init, chce prejsť na /usr/bin/calc Politika: file execute /usr/bin/calc inicializovať, enforcing mode Kroky: [candidate] = „/usr/bin/calc“ Žiadny agregátor initialize → [destination] = /usr/bin/calc, skok na 5 Vytvoriť /usr/bin/calc Env vars v poriadku → Áno Žiadne problémy s interpreterom → Áno Spustenie → Prechod na /usr/bin/calc Pripojenie poznámok Kľúčové pojmy: [candidate]: Cesta k programu [destination]: Nová doména [current_domain]: doména (napr. /sbin/init) [current_namespace]: Koreň ako Priorita: Krok 3 \u003e Krok 4 (špecifické pravidlá prekonávajú predvolené) Režim vynucovania: Striktné zakázanie pri zlyhaní ",
   "wordCount" : "616",
   "inLanguage": "sk",
-  "image": "http://localhost:1313/images/sensei_penguin_cropped.png","datePublished": "2025-03-03T00:00:00Z",
+  "image": "http://localhost:1313/images/profile_picture.jpg","datePublished": "2025-03-03T00:00:00Z",
   "dateModified": "2025-03-03T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -186,25 +164,13 @@ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [c
 }
 </script>
 </head>
-
-<body class="" id="top">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-
-</script>
-
-<header class="header">
+<body id="top">
+    <header class="header">
     <nav class="nav">
         <div class="logo">
             <a href="http://localhost:1313/sk/" accesskey="h" title="Samuel Sirota (Alt + H)">Samuel Sirota</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -224,12 +190,12 @@ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [c
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
                 </button>
-                <ul class="lang-switch"><li>|</li>
-                    <li>
-                        <a href="http://localhost:1313/" title="🇬🇧"
-                            aria-label="🇬🇧">🇬🇧</a>
-                    </li>
-                </ul>
+                    <ul class="lang-switch"><li>|</li>
+                        <li>
+                            <a href="http://localhost:1313/" title="🇬🇧"
+                                aria-label="🇬🇧">🇬🇧</a>
+                        </li>
+                    </ul>
             </div>
         </div>
         <ul id="menu">
@@ -269,12 +235,14 @@ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [c
     <h1 class="post-title entry-hint-parent">
       Tomoyo LSM prechody domén
     </h1>
-    <div class="post-meta"><span title='2025-03-03 00:00:00 +0000 UTC'>marca 3, 2025</span>&nbsp;·&nbsp;3 min&nbsp;|&nbsp;Preklady:
+    <div class="post-meta"><span title='2025-03-03 00:00:00 +0000 UTC'>3. marca 2025</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;|&nbsp;<span>Preklady:</span>
 <ul class="i18n_list">
     <li>
         <a href="http://localhost:1313/posts/lsm/tomoyo-domain-transition/">🇬🇧</a>
     </li>
-</ul>&nbsp;|&nbsp;<a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/posts/LSM/tomoyo-domain-transition.sk.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
+</ul>&nbsp;|&nbsp;<span>
+    <a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/posts/LSM/tomoyo-domain-transition.sk.md" rel="noopener noreferrer edit" target="_blank">Suggest Changes</a>
+</span>
 
 </div>
   </header> <div class="toc">
@@ -520,9 +488,14 @@ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [c
 </a>
 
 <script>
-    let menu = document.getElementById('menu')
+    let menu = document.getElementById('menu');
     if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
         menu.onscroll = function () {
             localStorage.setItem("menu-scroll-position", menu.scrollLeft);
         }
@@ -563,11 +536,12 @@ Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný [c
 </script>
 <script>
     document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
             localStorage.setItem("pref-theme", 'light');
         } else {
-            document.body.classList.add('dark');
+            html.dataset.theme = 'dark';
             localStorage.setItem("pref-theme", 'dark');
         }
     })

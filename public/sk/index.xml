@@ -6,13 +6,48 @@
     <description>Recent content on Samuel Sirota</description>
     <image>
       <title>Samuel Sirota</title>
-      <url>http://localhost:1313/images/sensei_penguin_cropped.png</url>
-      <link>http://localhost:1313/images/sensei_penguin_cropped.png</link>
+      <url>http://localhost:1313/images/profile_picture.jpg</url>
+      <link>http://localhost:1313/images/profile_picture.jpg</link>
     </image>
-    <generator>Hugo -- 0.144.2</generator>
+    <generator>Hugo -- 0.152.2</generator>
     <language>sk</language>
-    <lastBuildDate>Tue, 25 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 03 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/sk/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tomoyo LSM prechody domén</title>
+      <link>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</link>
+      <pubDate>Mon, 03 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</guid>
+      <description>&lt;p&gt;Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom &lt;code&gt;execve()&lt;/code&gt;) a prepínať domény&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Príklad:&lt;/strong&gt; Proces v &lt;code&gt;&amp;lt;kernel&amp;gt; /sbin/init&lt;/code&gt; chce spustiť &lt;code&gt;/usr/bin/calc&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;krok-1-získanie-názvu-cesty-programu&#34;&gt;Krok 1: Získanie názvu cesty programu&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Získajte úplnú cestu programu &lt;code&gt;[candidate]&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;môže byť symlink&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Príklad:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/usr/bin/calc → [candidate] = „/usr/bin/calc“
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;krok-2-kontrola-smernice-agregátora&#34;&gt;Krok 2: Kontrola smernice agregátora&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Skontrolujte politiku výnimiek pre &lt;code&gt;agregator [candidate] [pathname]&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ak sa nájde, nahraďte &lt;code&gt;[candidate]&lt;/code&gt; za &lt;code&gt;[pathname]&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Príklad:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný &lt;code&gt;[candidate]&lt;/code&gt;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>O mne</title>
       <link>http://localhost:1313/sk/about-me/</link>
@@ -56,42 +91,6 @@
       <pubDate>Sun, 10 Mar 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/sk/posts/rich-content/</guid>
       <description>A brief description of Hugo Shortcodes</description>
-    </item>
-    <item>
-      <title></title>
-      <link>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</guid>
-      <description>&lt;h1 id=&#34;tomoyo-postup-prechodu-domény&#34;&gt;TOMOYO Postup prechodu domény&lt;/h1&gt;
-&lt;p&gt;Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom &lt;code&gt;execve()&lt;/code&gt;) a prepínať domény&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Príklad:&lt;/strong&gt; Proces v &lt;code&gt;&amp;lt;kernel&amp;gt; /sbin/init&lt;/code&gt; chce spustiť &lt;code&gt;/usr/bin/calc&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;krok-1-získanie-názvu-cesty-programu&#34;&gt;Krok 1: Získanie názvu cesty programu&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Získajte úplnú cestu programu &lt;code&gt;[candidate]&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;môže byť symlink&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Príklad:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/usr/bin/calc → [candidate] = „/usr/bin/calc“
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;krok-2-kontrola-smernice-agregátora&#34;&gt;Krok 2: Kontrola smernice agregátora&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Skontrolujte politiku výnimiek pre &lt;code&gt;agregator [candidate] [pathname]&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Ak sa nájde, nahraďte &lt;code&gt;[candidate]&lt;/code&gt; za &lt;code&gt;[pathname]&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Príklad:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;aggregator /usr/bin/calc /bin/calculator → [candidate] = „/bin/calculator“
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný &lt;code&gt;[candidate]&lt;/code&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

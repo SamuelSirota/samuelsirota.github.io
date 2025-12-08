@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Audio on Samuel Sirota</title>
+    <link>http://localhost:1313/tags/audio/</link>
+    <description>Recent content in Audio on Samuel Sirota</description>
+    <image>
+      <title>Samuel Sirota</title>
+      <url>http://localhost:1313/images/profile_picture.jpg</url>
+      <link>http://localhost:1313/images/profile_picture.jpg</link>
+    </image>
+    <generator>Hugo -- 0.152.2</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 06 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/audio/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fixing Omarchy Audio</title>
+      <link>http://localhost:1313/posts/fixing-omarchy-audio/</link>
+      <pubDate>Sat, 06 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/fixing-omarchy-audio/</guid>
+      <description>&lt;p&gt;Recently I have been having problems on my Arch Linux omarchy setup. The system does not recognize my audio jack therefore I cannot use my wired headphones.
+I have been trying for quite some time to fix it luckily I managed to fix it and this is how.&lt;/p&gt;
+&lt;h2 id=&#34;finding-out-audio-codec&#34;&gt;Finding out audio codec&lt;/h2&gt;
+&lt;p&gt;To find what device does the audio encoding and decoding you can use this command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /proc/asound/card0/codec* &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -i Codec
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command shows you what codec your computer uses.
+Depending on the device you can search for known issues and fixes for the problems.
+My computer uses &lt;code&gt;Conexant CX118800&lt;/code&gt;, I found this codec is known to have a lot of issues when using it for Linux.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

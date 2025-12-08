@@ -6,10 +6,10 @@
     <description>Recent content in Sukromie on Samuel Sirota</description>
     <image>
       <title>Samuel Sirota</title>
-      <url>http://localhost:1313/images/sensei_penguin_cropped.png</url>
-      <link>http://localhost:1313/images/sensei_penguin_cropped.png</link>
+      <url>http://localhost:1313/images/profile_picture.jpg</url>
+      <link>http://localhost:1313/images/profile_picture.jpg</link>
     </image>
-    <generator>Hugo -- 0.144.2</generator>
+    <generator>Hugo -- 0.152.2</generator>
     <language>sk</language>
     <lastBuildDate>Sun, 10 Mar 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/sk/tags/sukromie/index.xml" rel="self" type="application/rss+xml" />

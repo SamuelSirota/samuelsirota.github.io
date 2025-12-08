@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="auto">
+<html lang="en" dir="auto" data-theme="dark">
 
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,7 +23,7 @@ Experience
 Through multiple team projects and a bachelor thesis, I have developed strong collaboration and research skills, applying theoretical knowledge to practical scenarios.">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/about-me/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.448b4c86e045664a722163802d0434f32bf5e7150f65a4dd5ed1dfe0cbbca35d.css" integrity="sha256-RItMhuBFZkpyIWOALQQ08yv15xUPZaTdXtHf4Mu8o10=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5156ae74ac8eed68099581cebcfba9e69b11a615c2bc8c04a5b5617a3eae1313.css" integrity="sha256-UVaudKyO7WgJlYHOvPup5psRphXCvIwEpbVhej6uExM=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -41,35 +41,13 @@ Through multiple team projects and a bachelor thesis, I have developed strong co
         }
 
     </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --code-block-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
 
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-
-    </style>
-</noscript><meta property="og:url" content="http://localhost:1313/about-me/">
+</script><meta property="og:url" content="http://localhost:1313/about-me/">
   <meta property="og:site_name" content="Samuel Sirota">
   <meta property="og:title" content="About me">
   <meta property="og:description" content="I am a versatile computer science professional with a strong foundation in programming, computer security, and artificial intelligence. My education has equipped me with a diverse set of skills, making me adept at tackling complex technical challenges.
@@ -78,9 +56,9 @@ Key Skills 💻 Programming and Development: Proficient in multiple programming 
   <meta property="og:type" content="article">
     <meta property="article:published_time" content="2025-02-25T00:00:00+00:00">
     <meta property="article:modified_time" content="2025-02-25T00:00:00+00:00">
-      <meta property="og:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+      <meta property="og:image" content="http://localhost:1313/images/profile_picture.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
+<meta name="twitter:image" content="http://localhost:1313/images/profile_picture.jpg">
 <meta name="twitter:title" content="About me">
 <meta name="twitter:description" content="I am a versatile computer science professional with a strong foundation in programming, computer security, and artificial intelligence. My education has equipped me with a diverse set of skills, making me adept at tackling complex technical challenges.
 Key Skills
@@ -125,7 +103,7 @@ Through multiple team projects and a bachelor thesis, I have developed strong co
   "articleBody": "I am a versatile computer science professional with a strong foundation in programming, computer security, and artificial intelligence. My education has equipped me with a diverse set of skills, making me adept at tackling complex technical challenges.\nKey Skills 💻 Programming and Development: Proficient in multiple programming languages, algorithms, data structures, web development, and software engineering. 🔒 Computer Security: Knowledgeable in cryptography, network security, information security practices, and legal aspects of computer crimes. 🤖 Artificial Intelligence and Machine Learning: Skilled in AI techniques, neural networks, and machine learning algorithms. 📐 Mathematics and Logic: Strong analytical skills with a solid foundation in linear algebra, discrete mathematics, statistics, and algorithmic analysis. 🖥️ Computer Theory and Systems: Familiar with computer architecture, operating systems, networking, and theoretical computer science. 🖱️ Human-Computer Interaction: Understanding of user interface design principles. 📈 Business and Marketing: Basics of digital marketing strategies. 🌐 Language: Proficient in English. Experience Through multiple team projects and a bachelor thesis, I have developed strong collaboration and research skills, applying theoretical knowledge to practical scenarios.\nDownload my CV\n",
   "wordCount" : "174",
   "inLanguage": "en",
-  "image": "http://localhost:1313/images/sensei_penguin_cropped.png","datePublished": "2025-02-25T00:00:00Z",
+  "image": "http://localhost:1313/images/profile_picture.jpg","datePublished": "2025-02-25T00:00:00Z",
   "dateModified": "2025-02-25T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -142,25 +120,13 @@ Through multiple team projects and a bachelor thesis, I have developed strong co
 }
 </script>
 </head>
-
-<body class="" id="top">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-
-</script>
-
-<header class="header">
+<body id="top">
+    <header class="header">
     <nav class="nav">
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Samuel Sirota (Alt + H)">Samuel Sirota</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -180,12 +146,12 @@ Through multiple team projects and a bachelor thesis, I have developed strong co
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
                 </button>
-                <ul class="lang-switch"><li>|</li>
-                    <li>
-                        <a href="http://localhost:1313/sk/" title="🇸🇰"
-                            aria-label="🇸🇰">🇸🇰</a>
-                    </li>
-                </ul>
+                    <ul class="lang-switch"><li>|</li>
+                        <li>
+                            <a href="http://localhost:1313/sk/" title="🇸🇰"
+                                aria-label="🇸🇰">🇸🇰</a>
+                        </li>
+                    </ul>
             </div>
         </div>
         <ul id="menu">
@@ -225,12 +191,14 @@ Through multiple team projects and a bachelor thesis, I have developed strong co
     <h1 class="post-title entry-hint-parent">
       About me
     </h1>
-    <div class="post-meta"><span title='2025-02-25 00:00:00 +0000 UTC'>February 25, 2025</span>&nbsp;·&nbsp;1 min&nbsp;|&nbsp;Translations:
+    <div class="post-meta"><span title='2025-02-25 00:00:00 +0000 UTC'>February 25, 2025</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;|&nbsp;<span>Translations:</span>
 <ul class="i18n_list">
     <li>
         <a href="http://localhost:1313/sk/about-me/">🇸🇰</a>
     </li>
-</ul>&nbsp;|&nbsp;<a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/about-me.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
+</ul>&nbsp;|&nbsp;<span>
+    <a href="https://github.com/SamuelSirota/samuelsirota.github.io/tree/master/content/about-me.md" rel="noopener noreferrer edit" target="_blank">Suggest Changes</a>
+</span>
 
 </div>
   </header> <div class="toc">
@@ -264,7 +232,7 @@ Through multiple team projects and a bachelor thesis, I have developed strong co
 </ul>
 <h3 id="experience">Experience<a hidden class="anchor" aria-hidden="true" href="#experience">#</a></h3>
 <p>Through multiple team projects and a bachelor thesis, I have developed strong collaboration and research skills, applying theoretical knowledge to practical scenarios.</p>
-<p><a href="/pdfs/CV_eng_Sirota.pdf" target="_blank" download>Download my CV</a></p>
+<p><a href="/pdfs/CV_sirota_en.pdf" target="_blank" download>Download my CV</a></p>
 
 
   </div>
@@ -292,9 +260,14 @@ Through multiple team projects and a bachelor thesis, I have developed strong co
 </a>
 
 <script>
-    let menu = document.getElementById('menu')
+    let menu = document.getElementById('menu');
     if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
         menu.onscroll = function () {
             localStorage.setItem("menu-scroll-position", menu.scrollLeft);
         }
@@ -335,11 +308,12 @@ Through multiple team projects and a bachelor thesis, I have developed strong co
 </script>
 <script>
     document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
             localStorage.setItem("pref-theme", 'light');
         } else {
-            document.body.classList.add('dark');
+            html.dataset.theme = 'dark';
             localStorage.setItem("pref-theme", 'dark');
         }
     })

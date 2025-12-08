@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="auto">
+<html lang="en" dir="auto" data-theme="dark">
 
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,10 +7,10 @@
 <meta name="robots" content="index, follow">
 <title>Code | Samuel Sirota</title>
 <meta name="keywords" content="">
-<meta name="description" content="Samuel Sirota personal website">
+<meta name="description" content="Samuel Sirota&#39;s personal website">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/tags/code/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.448b4c86e045664a722163802d0434f32bf5e7150f65a4dd5ed1dfe0cbbca35d.css" integrity="sha256-RItMhuBFZkpyIWOALQQ08yv15xUPZaTdXtHf4Mu8o10=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5156ae74ac8eed68099581cebcfba9e69b11a615c2bc8c04a5b5617a3eae1313.css" integrity="sha256-UVaudKyO7WgJlYHOvPup5psRphXCvIwEpbVhej6uExM=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -18,7 +18,7 @@
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/tags/code/index.xml">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/tags/code/index.xml" title="rss">
 <link rel="alternate" hreflang="en" href="http://localhost:1313/tags/code/">
 <noscript>
     <style>
@@ -28,66 +28,32 @@
         }
 
     </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --code-block-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-
-    </style>
-</noscript><meta property="og:url" content="http://localhost:1313/tags/code/">
-  <meta property="og:site_name" content="Samuel Sirota">
-  <meta property="og:title" content="Code">
-  <meta property="og:description" content="Samuel Sirota personal website">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="website">
-      <meta property="og:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://localhost:1313/images/sensei_penguin_cropped.png">
-<meta name="twitter:title" content="Code">
-<meta name="twitter:description" content="Samuel Sirota personal website">
-
-</head>
-
-<body class="list" id="top">
+</noscript>
 <script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
     }
 
-</script>
+</script><meta property="og:url" content="http://localhost:1313/tags/code/">
+  <meta property="og:site_name" content="Samuel Sirota">
+  <meta property="og:title" content="Code">
+  <meta property="og:description" content="Samuel Sirota&#39;s personal website">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="website">
+      <meta property="og:image" content="http://localhost:1313/images/profile_picture.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://localhost:1313/images/profile_picture.jpg">
+<meta name="twitter:title" content="Code">
+<meta name="twitter:description" content="Samuel Sirota&#39;s personal website">
 
-<header class="header">
+</head>
+<body class="list" id="top">
+    <header class="header">
     <nav class="nav">
         <div class="logo">
             <a href="http://localhost:1313/" accesskey="h" title="Samuel Sirota (Alt + H)">Samuel Sirota</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -107,12 +73,12 @@
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
                 </button>
-                <ul class="lang-switch"><li>|</li>
-                    <li>
-                        <a href="http://localhost:1313/sk/" title="🇸🇰"
-                            aria-label="🇸🇰">🇸🇰</a>
-                    </li>
-                </ul>
+                    <ul class="lang-switch"><li>|</li>
+                        <li>
+                            <a href="http://localhost:1313/sk/" title="🇸🇰"
+                                aria-label="🇸🇰">🇸🇰</a>
+                        </li>
+                    </ul>
             </div>
         </div>
         <ul id="menu">
@@ -167,7 +133,7 @@
   <div class="entry-content">
     <p>Sample article showcasing basic code syntax and formatting for HTML elements.</p>
   </div>
-  <footer class="entry-footer"><span title='2019-03-10 00:00:00 +0000 UTC'>March 10, 2019</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;Aditya Telange</footer>
+  <footer class="entry-footer"><span title='2019-03-10 00:00:00 +0000 UTC'>March 10, 2019</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Aditya Telange</span></footer>
   <a class="entry-link" aria-label="post link to Code Syntax Guide" href="http://localhost:1313/posts/code_syntax/"></a>
 </article>
     </main>
@@ -188,9 +154,14 @@
 </a>
 
 <script>
-    let menu = document.getElementById('menu')
+    let menu = document.getElementById('menu');
     if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
         menu.onscroll = function () {
             localStorage.setItem("menu-scroll-position", menu.scrollLeft);
         }
@@ -231,11 +202,12 @@
 </script>
 <script>
     document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
             localStorage.setItem("pref-theme", 'light');
         } else {
-            document.body.classList.add('dark');
+            html.dataset.theme = 'dark';
             localStorage.setItem("pref-theme", 'dark');
         }
     })

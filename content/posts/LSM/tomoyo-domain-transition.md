@@ -1,6 +1,7 @@
 ---
 title: "TOMOYO Domain transitions"
 date: "2025-03-03"
+tags: ["linux"]
 ShowToc: true
 ---
 

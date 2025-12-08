@@ -6,44 +6,19 @@
     <description>Recent content in Posts on Samuel Sirota</description>
     <image>
       <title>Samuel Sirota</title>
-      <url>http://localhost:1313/images/sensei_penguin_cropped.png</url>
-      <link>http://localhost:1313/images/sensei_penguin_cropped.png</link>
+      <url>http://localhost:1313/images/profile_picture.jpg</url>
+      <link>http://localhost:1313/images/profile_picture.jpg</link>
     </image>
-    <generator>Hugo -- 0.144.2</generator>
+    <generator>Hugo -- 0.152.2</generator>
     <language>sk</language>
-    <lastBuildDate>Tue, 25 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 03 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/sk/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Tomoyo LSM inštalácia</title>
-      <link>http://localhost:1313/sk/posts/lsm/tomoyo-installation/</link>
-      <pubDate>Tue, 25 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/sk/posts/lsm/tomoyo-installation/</guid>
-      <description>&lt;h2 id=&#34;inštalácia-tomoyo-na-ubuntu-240401&#34;&gt;Inštalácia TOMOYO na Ubuntu 24.04.01&lt;/h2&gt;
-&lt;p&gt;Najprv skontrolujeme, či má jadro povolené TOMOYO:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;grep tomoyo_write_inet_network /proc/kallsyms
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Výpis by mal byť takýto:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;m&#34;&gt;0000000000000000&lt;/span&gt; T tomoyo_write_inet_network
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.&lt;/p&gt;
-&lt;h2 id=&#34;inštalácia-závislostí&#34;&gt;Inštalácia závislostí&lt;/h2&gt;
-&lt;p&gt;Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo apt-get -y install wget patch gcc make libncurses-dev
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;konfigurácia-jadra&#34;&gt;Konfigurácia jadra&lt;/h2&gt;
-&lt;p&gt;Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v &lt;a href=&#34;https://tomoyo.sourceforge.net/2.6/chapter-3.html.en#3.1.3&#34;&gt;dokumentácii TOMOYO&lt;/a&gt;.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Bohaty content and skratky</title>
-      <link>http://localhost:1313/sk/posts/rich-content/</link>
-      <pubDate>Sun, 10 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/sk/posts/rich-content/</guid>
-      <description>A brief description of Hugo Shortcodes</description>
-    </item>
-    <item>
-      <title></title>
+      <title>Tomoyo LSM prechody domén</title>
       <link>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 03 Mar 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/sk/posts/lsm/tomoyo-domain-transition/</guid>
-      <description>&lt;h1 id=&#34;tomoyo-postup-prechodu-domény&#34;&gt;TOMOYO Postup prechodu domény&lt;/h1&gt;
-&lt;p&gt;Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom &lt;code&gt;execve()&lt;/code&gt;) a prepínať domény&lt;/p&gt;
+      <description>&lt;p&gt;Ako TOMOYO rozhodne, či proces môže spustiť program (prostredníctvom &lt;code&gt;execve()&lt;/code&gt;) a prepínať domény&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Príklad:&lt;/strong&gt; Proces v &lt;code&gt;&amp;lt;kernel&amp;gt; /sbin/init&lt;/code&gt; chce spustiť &lt;code&gt;/usr/bin/calc&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id=&#34;krok-1-získanie-názvu-cesty-programu&#34;&gt;Krok 1: Získanie názvu cesty programu&lt;/h2&gt;
 &lt;ul&gt;
@@ -72,6 +47,30 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Agregátor zoskupuje podobné programy; ak žiadny nie je, ponechá pôvodný &lt;code&gt;[candidate]&lt;/code&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Tomoyo LSM inštalácia</title>
+      <link>http://localhost:1313/sk/posts/lsm/tomoyo-installation/</link>
+      <pubDate>Tue, 25 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/sk/posts/lsm/tomoyo-installation/</guid>
+      <description>&lt;h2 id=&#34;inštalácia-tomoyo-na-ubuntu-240401&#34;&gt;Inštalácia TOMOYO na Ubuntu 24.04.01&lt;/h2&gt;
+&lt;p&gt;Najprv skontrolujeme, či má jadro povolené TOMOYO:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;grep tomoyo_write_inet_network /proc/kallsyms
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Výpis by mal byť takýto:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;m&#34;&gt;0000000000000000&lt;/span&gt; T tomoyo_write_inet_network
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Výpis znamená, že tomoyo LSM je zakompilovaný do jadra, nemusíme ho aktivovať v jadre, čo nám uľahčuje prácu.&lt;/p&gt;
+&lt;h2 id=&#34;inštalácia-závislostí&#34;&gt;Inštalácia závislostí&lt;/h2&gt;
+&lt;p&gt;Pred stiahnutím a kompiláciou nástrojov používateľského priestoru TOMOYO musíme nainštalovať niektoré knižnice.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo apt-get -y install wget patch gcc make libncurses-dev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;konfigurácia-jadra&#34;&gt;Konfigurácia jadra&lt;/h2&gt;
+&lt;p&gt;Túto časť môžeme preskočiť, pretože naše jadro už má TOMOYO aktivované. Ak by tomu tak nebolo, museli by sme stiahnuť zdrojové kódy jadra a nakonfigurovať ho. Táto časť je obsiahnutá v &lt;a href=&#34;https://tomoyo.sourceforge.net/2.6/chapter-3.html.en#3.1.3&#34;&gt;dokumentácii TOMOYO&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Bohaty content and skratky</title>
+      <link>http://localhost:1313/sk/posts/rich-content/</link>
+      <pubDate>Sun, 10 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/sk/posts/rich-content/</guid>
+      <description>A brief description of Hugo Shortcodes</description>
     </item>
   </channel>
 </rss>
