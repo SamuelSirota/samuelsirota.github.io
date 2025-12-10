@@ -1,6 +1,6 @@
 ---
 date: '2025-12-06'
-title: 'Fixing Omarchy Audio'
+title: 'Oprava Omarchy Audia'
 tags: ["omarchy","arch","audio","linux"]
 showToc: true
 ---
